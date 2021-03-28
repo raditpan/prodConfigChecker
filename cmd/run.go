@@ -34,7 +34,10 @@ var runCmd = &cobra.Command{
 
 prodConfigChecker run acm-bpay-api`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("app name to check : " + args[0])
+		colorBlue := "\033[34m"
+		colorReset := "\033[0m"
+
+		fmt.Println(string(colorBlue), "app name to check : " + args[0])
 
 		appName := args[0]
 		configRepoPath := "/Users/raditpanjapiyakul/project-source/acm-tmn-th-ocp-app-configs"
@@ -52,7 +55,7 @@ prodConfigChecker run acm-bpay-api`,
 		dmp := diffmatchpatch.New()
 
 		diffs := dmp.DiffMain(myString1, myString2, false)
-		fmt.Println("config files diff : ")
+		fmt.Println(string(colorBlue), "config files diff : ", string(colorReset))
 		fmt.Println(dmp.DiffPrettyText(diffs))
 	},
 }
