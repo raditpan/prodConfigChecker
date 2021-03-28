@@ -16,23 +16,44 @@ limitations under the License.
 package cmd
 
 import (
+	"io/ioutil"
+
 	"fmt"
 
 	"github.com/spf13/cobra"
+
+	"github.com/sergi/go-diff/diffmatchpatch"
 )
 
 // runCmd represents the run command
 var runCmd = &cobra.Command{
 	Use:   "run",
 	Short: "Compare production config with qa config",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
+	Long: `Compare production config with qa config by specifying the name of application to compare
+	 For example:
 
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+prodConfigChecker run acm-bpay-api`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("run called")
+		fmt.Println("app name to check : " + args[0])
+
+		appName := args[0]
+		configRepoPath := "/Users/raditpanjapiyakul/project-source/acm-tmn-th-ocp-app-configs"
+
+		prod, err := ioutil.ReadFile(configRepoPath + "/production/" + appName + "/application.yml")
+		if err != nil{
+			panic(err)
+		}
+		qa, err2 := ioutil.ReadFile(configRepoPath + "/qa/" + appName + "/application.yml")
+		if err2 != nil{
+			panic(err2)
+		}
+		myString1 := string(qa[:])
+		myString2 := string(prod[:])
+		dmp := diffmatchpatch.New()
+
+		diffs := dmp.DiffMain(myString1, myString2, false)
+		fmt.Println("config files diff : ")
+		fmt.Println(dmp.DiffPrettyText(diffs))
 	},
 }
 
