@@ -20,6 +20,8 @@ import (
 
 	"fmt"
 
+	"strings"
+
 	"github.com/spf13/cobra"
 
 	"github.com/spf13/viper"
@@ -44,21 +46,34 @@ prodConfigChecker run acm-bpay-api`,
 		appName := args[0]
 		configRepoPath := viper.GetString("configRepoPath")
 
-		prod, err := ioutil.ReadFile(configRepoPath + "/production/" + appName + "/application.yml")
-		if err != nil{
+
+		files, err := ioutil.ReadDir(configRepoPath + "/production/" + appName)
+		if err != nil {
 			panic(err)
 		}
-		qa, err2 := ioutil.ReadFile(configRepoPath + "/qa/" + appName + "/application.yml")
-		if err2 != nil{
-			panic(err2)
-		}
-		myString1 := string(qa[:])
-		myString2 := string(prod[:])
-		dmp := diffmatchpatch.New()
+	
+		for _, f := range files {
+			if strings.HasPrefix(f.Name(), ".") {
+				continue
+			}
 
-		diffs := dmp.DiffMain(myString1, myString2, false)
-		fmt.Println(string(colorBlue), "application.yml config files diff : ", string(colorReset))
-		fmt.Println(dmp.DiffPrettyText(diffs))
+			prod, err := ioutil.ReadFile(configRepoPath + "/production/" + appName + "/" + f.Name())
+			if err != nil{
+				panic(err)
+			}
+			qa, err2 := ioutil.ReadFile(configRepoPath + "/qa/" + appName + "/" + f.Name())
+			if err2 != nil{
+				panic(err2)
+			}
+			myString1 := string(qa[:])
+			myString2 := string(prod[:])
+			dmp := diffmatchpatch.New()
+
+			diffs := dmp.DiffMain(myString1, myString2, false)
+			fmt.Println("=====================================");
+			fmt.Println(string(colorBlue), f.Name() + " config files diff : ", string(colorReset))
+			fmt.Println(dmp.DiffPrettyText(diffs))
+		}
 	},
 }
 
