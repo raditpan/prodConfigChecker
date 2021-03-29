@@ -70,7 +70,7 @@ prodConfigChecker run acm-bpay-api`,
 			dmp := diffmatchpatch.New()
 
 			diffs := dmp.DiffMain(myString1, myString2, false)
-			fmt.Println("=====================================");
+			fmt.Println(string(colorBlue), "=====================================");
 			fmt.Println(string(colorBlue), f.Name() + " config files diff : ", string(colorReset))
 			fmt.Println(dmp.DiffPrettyText(diffs))
 		}
