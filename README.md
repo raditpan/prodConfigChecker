@@ -2,6 +2,13 @@
 Command line for checking diff between prod and qa config, to help reduce human error when working with config files in multiple environments.
 
 # How to run
+create `.prodConfigChecker.yaml` file in your home directoy with path to your local config repo:
+```
+configRepoPath: "<absolute path to your config repo>"
+```
+
+Run the command
+
 ```
 prodConfigChecker run <app_name>
 ```

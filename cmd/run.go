@@ -22,6 +22,8 @@ import (
 
 	"github.com/spf13/cobra"
 
+	"github.com/spf13/viper"
+
 	"github.com/sergi/go-diff/diffmatchpatch"
 )
 
@@ -40,7 +42,7 @@ prodConfigChecker run acm-bpay-api`,
 		fmt.Println(string(colorBlue), "app name to check : " + args[0])
 
 		appName := args[0]
-		configRepoPath := "/Users/raditpanjapiyakul/project-source/acm-tmn-th-ocp-app-configs"
+		configRepoPath := viper.GetString("configRepoPath")
 
 		prod, err := ioutil.ReadFile(configRepoPath + "/production/" + appName + "/application.yml")
 		if err != nil{
