@@ -1,7 +1,27 @@
 # prodConfigChecker
 Command line for checking diff between prod and qa config, to help reduce human error when working with config files in multiple environments.
 
+# Prepare Go enviroment
+These are steps to setup your environment to run Go package.
+First, install Go in your machine:
+```
+brew install go
+```
+
+Add below GOPATH var in your ~/.zshrc or ~/.bash_profile:
+```
+export GOPATH=$HOME/go
+export GOBIN=$GOPATH/bin
+export PATH=${PATH}:$GOBIN
+```
+
 # How to run
+install the command line:
+```
+go get github.com/raditpan/prodConfigChecker
+```
+
+
 create `.prodConfigChecker.yaml` file in your home directoy with path to your local config repo:
 ```
 configRepoPath: "<absolute path to your config repo>"
@@ -14,10 +34,6 @@ prodConfigChecker run <app_name>
 ```
 
 # Build/run from source
-First, install Go in your machine
-```
-brew install go
-```
 
 Go to the directory you clone the project to. You can run the app with these commands:
 ```
