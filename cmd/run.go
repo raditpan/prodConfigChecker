@@ -51,7 +51,10 @@ prodConfigChecker run acm-bpay-api`,
 		if err != nil {
 			panic(err)
 		}
-	
+
+		var sb strings.Builder
+		sb.WriteString("<h2>" + appName + " Config Diff Report</h2>");
+
 		for _, f := range files {
 			if strings.HasPrefix(f.Name(), ".") {
 				continue
@@ -73,7 +76,15 @@ prodConfigChecker run acm-bpay-api`,
 			fmt.Println(string(colorBlue), "=====================================");
 			fmt.Println(string(colorBlue), f.Name() + " config files diff : ", string(colorReset))
 			fmt.Println(dmp.DiffPrettyText(diffs))
+
+			//cleanDiffs := dmp.DiffCleanupSemantic(diffs);
+
+			sb.WriteString("<b>" + f.Name() + " : </b><br>");
+			sb.WriteString(strings.Replace(dmp.DiffPrettyHtml(diffs), "&para;", "", -1))
+			sb.WriteString("<hr>");
 		}
+
+		ioutil.WriteFile(appName + "_config_diff.html", []byte(sb.String()), 0644)
 	},
 }
 

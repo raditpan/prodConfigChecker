@@ -31,6 +31,9 @@ Run the command
 
 ```
 prodConfigChecker run <app_name>
+
+// run with custom config file
+prodConfigChecker run <app_name> --config custom-config.yaml
 ```
 
 # Build/run from source
