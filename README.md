@@ -1,8 +1,8 @@
 # prodConfigChecker
-Command line for checking diff between prod and qa config, to help reduce human error when working with config files in multiple environments.
+Command line tool for checking diff between prod and qa config, to help reduce human error when working with config files in multiple environments.
 
-# Prepare Go enviroment
-These are steps to setup your environment to run Go package.
+## Prepare Go enviroment
+These are steps to setup your environment to install and run Go package easily.
 First, install Go in your machine:
 ```
 brew install go
@@ -15,8 +15,8 @@ export GOBIN=$GOPATH/bin
 export PATH=${PATH}:$GOBIN
 ```
 
-# How to run
-install the command line:
+## How to run
+install the command line tool:
 ```
 go get github.com/raditpan/prodConfigChecker
 ```
@@ -27,7 +27,7 @@ create `.prodConfigChecker.yaml` file in your home directoy with path to your lo
 configRepoPath: "<absolute path to your config repo>"
 ```
 
-Run the command
+Run the command:
 
 ```
 prodConfigChecker run <app_name>
@@ -36,7 +36,7 @@ prodConfigChecker run <app_name>
 prodConfigChecker run <app_name> --config custom-config.yaml
 ```
 
-# Build/run from source
+## Build/run from source
 
 Go to the directory you clone the project to. You can run the app with these commands:
 ```
@@ -44,5 +44,5 @@ Go to the directory you clone the project to. You can run the app with these com
 go get -d ./...
 
 // run the main app
-go run main.go
+go run main.go run <app_name>
 ```
