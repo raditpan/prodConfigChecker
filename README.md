@@ -36,6 +36,8 @@ prodConfigChecker run <app_name>
 prodConfigChecker run <app_name> --config custom-config.yaml
 ```
 
+Check the diff output in terminal console. HTML output file is also generated in your current directory, in case you want to share the result with others.
+
 ## Build/run from source
 
 Go to the directory you clone the project to. You can run the app with these commands:
