@@ -68,7 +68,6 @@ prodConfigChecker run acm-bpay-api`,
 			}
 
 			var item ConfigDiffItem
-			item.fileName = f.Name()
 
 			prod, err := ioutil.ReadFile(configRepoPath + "/production/" + appName + "/" + f.Name())
 			if err != nil{
@@ -89,18 +88,14 @@ prodConfigChecker run acm-bpay-api`,
 				continue
 			}
 
-			dmp.DiffCleanupSemantic(diffs)
-
 			fmt.Println(string(colorBlue), "=====================================")
 			fmt.Println(string(colorBlue), f.Name() + " config files diff : ", string(colorReset))
 			fmt.Println(dmp.DiffPrettyText(diffs))
 
-			// var patchList = dmp.PatchMake(qaFileString, prodFileString, diffs)
-			// var patchText = dmp.PatchToText(patchList)
-			// fmt.Println(patchText)
 			fileExtension := filepath.Ext(f.Name())
 			shouldFixTab := fileExtension == ".yml" || fileExtension == ".yaml"
 
+			item.fileName = f.Name()
 			item.diffLeft = DiffPrettyHtmlLeft(diffs, shouldFixTab)
 			item.diffRight = DiffPrettyHtmlRight(diffs, shouldFixTab)
 
