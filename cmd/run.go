@@ -52,13 +52,15 @@ prodConfigChecker run acm-bpay-api`,
 			panic(err)
 		}
 
-		var sb strings.Builder
-		sb.WriteString("<h2>" + appName + " Config Diff Report</h2>");
+		diffArray := make([]ConfigDiffItem, 0)
 
 		for _, f := range files {
 			if strings.HasPrefix(f.Name(), ".") {
 				continue
 			}
+
+			var item ConfigDiffItem
+			item.fileName = f.Name()
 
 			prod, err := ioutil.ReadFile(configRepoPath + "/production/" + appName + "/" + f.Name())
 			if err != nil{
@@ -73,18 +75,16 @@ prodConfigChecker run acm-bpay-api`,
 			dmp := diffmatchpatch.New()
 
 			diffs := dmp.DiffMain(myString1, myString2, false)
-			fmt.Println(string(colorBlue), "=====================================");
+			fmt.Println(string(colorBlue), "=====================================")
 			fmt.Println(string(colorBlue), f.Name() + " config files diff : ", string(colorReset))
 			fmt.Println(dmp.DiffPrettyText(diffs))
 
-			//cleanDiffs := dmp.DiffCleanupSemantic(diffs);
+			item.diffResult = dmp.DiffPrettyHtml(diffs)
 
-			sb.WriteString("<b>" + f.Name() + " : </b><br>");
-			sb.WriteString(strings.Replace(dmp.DiffPrettyHtml(diffs), "&para;", "", -1))
-			sb.WriteString("<hr>");
+			diffArray = append(diffArray, item)
 		}
 
-		ioutil.WriteFile(appName + "_config_diff.html", []byte(sb.String()), 0644)
+		writeHtmlFile(diffArray, appName)
 	},
 }
 
@@ -100,4 +100,23 @@ func init() {
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
 	// runCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+}
+
+func writeHtmlFile(diffArray []ConfigDiffItem, appName string) {
+
+	var sb strings.Builder
+	sb.WriteString("<h2>" + appName + " Config Diff Report</h2>")
+
+		for _, htmlDiff := range diffArray {
+			sb.WriteString("<b>" + htmlDiff.fileName + " : </b><br>")
+			sb.WriteString(strings.Replace(htmlDiff.diffResult, "&para;", "", -1))
+			sb.WriteString("<hr>");
+		}
+
+	ioutil.WriteFile(appName + "_config_diff.html", []byte(sb.String()), 0644)
+}
+
+type ConfigDiffItem struct {
+	fileName string
+	diffResult string
 }
