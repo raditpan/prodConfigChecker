@@ -155,7 +155,7 @@ func DiffPrettyHtmlLeft(diffs []diffmatchpatch.Diff) string {
 		text := strings.Replace(html.EscapeString(diff.Text), "\n", "<br>", -1)
 		switch diff.Type {
 		case diffmatchpatch.DiffDelete:
-			_, _ = buff.WriteString("<del style=\"background:#ffe6e6;\">")
+			_, _ = buff.WriteString("<del style=\"background:#ffb5b5;\">")
 			_, _ = buff.WriteString(text)
 			_, _ = buff.WriteString("</del>")
 		case diffmatchpatch.DiffEqual:
@@ -174,7 +174,7 @@ func DiffPrettyHtmlRight(diffs []diffmatchpatch.Diff) string {
 		text := strings.Replace(html.EscapeString(diff.Text), "\n", "<br>", -1)
 		switch diff.Type {
 		case diffmatchpatch.DiffInsert:
-			_, _ = buff.WriteString("<ins style=\"background:#e6ffe6;\">")
+			_, _ = buff.WriteString("<ins style=\"background:#d1ffd1;\">")
 			_, _ = buff.WriteString(text)
 			_, _ = buff.WriteString("</ins>")
 		case diffmatchpatch.DiffEqual:
