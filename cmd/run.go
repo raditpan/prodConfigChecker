@@ -70,11 +70,11 @@ prodConfigChecker run acm-bpay-api`,
 			if err2 != nil{
 				panic(err2)
 			}
-			myString1 := string(qa[:])
-			myString2 := string(prod[:])
+			qaFileString := string(qa[:])
+			prodFileString := string(prod[:])
 			dmp := diffmatchpatch.New()
 
-			diffs := dmp.DiffMain(myString1, myString2, false)
+			diffs := dmp.DiffMain(qaFileString, prodFileString, false)
 			fmt.Println(string(colorBlue), "=====================================")
 			fmt.Println(string(colorBlue), f.Name() + " config files diff : ", string(colorReset))
 			fmt.Println(dmp.DiffPrettyText(diffs))
