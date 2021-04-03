@@ -22,6 +22,10 @@ import (
 
 	"strings"
 
+	"bytes"
+
+	"html"
+
 	"github.com/spf13/cobra"
 
 	"github.com/spf13/viper"
@@ -90,7 +94,8 @@ prodConfigChecker run acm-bpay-api`,
 			// var patchList = dmp.PatchMake(qaFileString, prodFileString, diffs)
 			// var patchText = dmp.PatchToText(patchList)
 			// fmt.Println(patchText)
-			item.diffResult = dmp.DiffPrettyHtml(diffs)
+			item.diffLeft = DiffPrettyHtmlLeft(diffs)
+			item.diffRight = DiffPrettyHtmlRight(diffs)
 
 			diffArray = append(diffArray, item)
 		}
@@ -116,11 +121,21 @@ func init() {
 func writeHtmlFile(diffArray []ConfigDiffItem, appName string) {
 
 	var sb strings.Builder
-	sb.WriteString("<h2>" + appName + " Config Diff Report</h2>")
+	sb.WriteString("<h2>" + appName + " - config diff report</h2>")
+	sb.WriteString("<hr>");
 
 		for _, htmlDiff := range diffArray {
-			sb.WriteString("<b>" + htmlDiff.fileName + " : </b><br>")
-			sb.WriteString(strings.Replace(htmlDiff.diffResult, "&para;", "", -1))
+			sb.WriteString("<div>");
+			sb.WriteString("<b>" + htmlDiff.fileName + " : </b><br><br>")
+			sb.WriteString("<div style=\"float: left;width: 50%;\">");
+			sb.WriteString("<b> QA : </b><br><br>")
+			sb.WriteString(htmlDiff.diffLeft)
+			sb.WriteString("</div>")
+			sb.WriteString("<div style=\"float: right;width: 50%;\">");
+			sb.WriteString("<b> PROD : </b><br><br>")
+			sb.WriteString(htmlDiff.diffRight)
+			sb.WriteString("</div>")
+			sb.WriteString("</div>")
 			sb.WriteString("<hr>");
 		}
 
@@ -129,5 +144,44 @@ func writeHtmlFile(diffArray []ConfigDiffItem, appName string) {
 
 type ConfigDiffItem struct {
 	fileName string
-	diffResult string
+	diffLeft string
+	diffRight string
+}
+
+
+func DiffPrettyHtmlLeft(diffs []diffmatchpatch.Diff) string {
+	var buff bytes.Buffer
+	for _, diff := range diffs {
+		text := strings.Replace(html.EscapeString(diff.Text), "\n", "<br>", -1)
+		switch diff.Type {
+		case diffmatchpatch.DiffDelete:
+			_, _ = buff.WriteString("<del style=\"background:#ffe6e6;\">")
+			_, _ = buff.WriteString(text)
+			_, _ = buff.WriteString("</del>")
+		case diffmatchpatch.DiffEqual:
+			_, _ = buff.WriteString("<span>")
+			_, _ = buff.WriteString(text)
+			_, _ = buff.WriteString("</span>")
+		}
+	}
+	return buff.String()
+}
+
+
+func DiffPrettyHtmlRight(diffs []diffmatchpatch.Diff) string {
+	var buff bytes.Buffer
+	for _, diff := range diffs {
+		text := strings.Replace(html.EscapeString(diff.Text), "\n", "<br>", -1)
+		switch diff.Type {
+		case diffmatchpatch.DiffInsert:
+			_, _ = buff.WriteString("<ins style=\"background:#e6ffe6;\">")
+			_, _ = buff.WriteString(text)
+			_, _ = buff.WriteString("</ins>")
+		case diffmatchpatch.DiffEqual:
+			_, _ = buff.WriteString("<span>")
+			_, _ = buff.WriteString(text)
+			_, _ = buff.WriteString("</span>")
+		}
+	}
+	return buff.String()
 }
