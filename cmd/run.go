@@ -187,9 +187,9 @@ func DiffPrettyHtmlRight(diffs []diffmatchpatch.Diff, doFixTab bool) string {
 
 		switch diff.Type {
 		case diffmatchpatch.DiffInsert:
-			_, _ = buff.WriteString("<ins style=\"background:#d1ffd1;\">")
+			_, _ = buff.WriteString("<span style=\"background:#d1ffd1;\">")
 			_, _ = buff.WriteString(text)
-			_, _ = buff.WriteString("</ins>")
+			_, _ = buff.WriteString("</span>")
 		case diffmatchpatch.DiffEqual:
 			_, _ = buff.WriteString("<span>")
 			_, _ = buff.WriteString(text)
