@@ -28,6 +28,8 @@ import (
 
 	"strconv"
 
+	"path/filepath"
+
 	"github.com/spf13/cobra"
 
 	"github.com/spf13/viper"
@@ -96,8 +98,11 @@ prodConfigChecker run acm-bpay-api`,
 			// var patchList = dmp.PatchMake(qaFileString, prodFileString, diffs)
 			// var patchText = dmp.PatchToText(patchList)
 			// fmt.Println(patchText)
-			item.diffLeft = DiffPrettyHtmlLeft(diffs)
-			item.diffRight = DiffPrettyHtmlRight(diffs)
+			fileExtension := filepath.Ext(f.Name())
+			shouldFixTab := fileExtension == ".yml" || fileExtension == ".yaml"
+
+			item.diffLeft = DiffPrettyHtmlLeft(diffs, shouldFixTab)
+			item.diffRight = DiffPrettyHtmlRight(diffs, shouldFixTab)
 
 			diffArray = append(diffArray, item)
 		}
@@ -152,10 +157,15 @@ type ConfigDiffItem struct {
 }
 
 
-func DiffPrettyHtmlLeft(diffs []diffmatchpatch.Diff) string {
+func DiffPrettyHtmlLeft(diffs []diffmatchpatch.Diff, doFixTab bool) string {
 	var buff bytes.Buffer
 	for _, diff := range diffs {
 		text := strings.Replace(html.EscapeString(diff.Text), "\n", "<br>", -1)
+		
+		if doFixTab {
+			text = strings.Replace(text, " ", "&nbsp;", -1)
+		}
+
 		switch diff.Type {
 		case diffmatchpatch.DiffDelete:
 			_, _ = buff.WriteString("<del style=\"background:#ffb5b5;\">")
@@ -171,10 +181,15 @@ func DiffPrettyHtmlLeft(diffs []diffmatchpatch.Diff) string {
 }
 
 
-func DiffPrettyHtmlRight(diffs []diffmatchpatch.Diff) string {
+func DiffPrettyHtmlRight(diffs []diffmatchpatch.Diff, doFixTab bool) string {
 	var buff bytes.Buffer
 	for _, diff := range diffs {
 		text := strings.Replace(html.EscapeString(diff.Text), "\n", "<br>", -1)
+		
+		if doFixTab {
+			text = strings.Replace(text, " ", "&nbsp;", -1)
+		}
+
 		switch diff.Type {
 		case diffmatchpatch.DiffInsert:
 			_, _ = buff.WriteString("<ins style=\"background:#d1ffd1;\">")
