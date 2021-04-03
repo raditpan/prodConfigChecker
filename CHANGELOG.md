@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.3.1] - 2021-04-03
+### Fixed
+- Fix somes json lines are missing in html output
+
 ## [0.3.0] - 2021-04-03
 ### Changed
 - Update html diff report to side-by-side diff
