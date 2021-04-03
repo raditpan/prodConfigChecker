@@ -125,13 +125,13 @@ func writeHtmlFile(diffArray []ConfigDiffItem, appName string) {
 	sb.WriteString("<hr>");
 
 		for _, htmlDiff := range diffArray {
-			sb.WriteString("<div>");
+			sb.WriteString("<div style=\"overflow: auto;\">");
 			sb.WriteString("<b>" + htmlDiff.fileName + " : </b><br><br>")
 			sb.WriteString("<div style=\"float: left;width: 50%;\">");
 			sb.WriteString("<b> QA : </b><br><br>")
 			sb.WriteString(htmlDiff.diffLeft)
 			sb.WriteString("</div>")
-			sb.WriteString("<div style=\"float: right;width: 50%;\">");
+			sb.WriteString("<div style=\"float: left;width: 50%;\">");
 			sb.WriteString("<b> PROD : </b><br><br>")
 			sb.WriteString(htmlDiff.diffRight)
 			sb.WriteString("</div>")
