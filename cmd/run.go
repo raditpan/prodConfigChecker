@@ -75,10 +75,21 @@ prodConfigChecker run acm-bpay-api`,
 			dmp := diffmatchpatch.New()
 
 			diffs := dmp.DiffMain(qaFileString, prodFileString, false)
+
+			if len(diffs) == 1 {
+				// skip the file for no diff case
+				continue
+			}
+
+			dmp.DiffCleanupSemantic(diffs)
+
 			fmt.Println(string(colorBlue), "=====================================")
 			fmt.Println(string(colorBlue), f.Name() + " config files diff : ", string(colorReset))
 			fmt.Println(dmp.DiffPrettyText(diffs))
 
+			// var patchList = dmp.PatchMake(qaFileString, prodFileString, diffs)
+			// var patchText = dmp.PatchToText(patchList)
+			// fmt.Println(patchText)
 			item.diffResult = dmp.DiffPrettyHtml(diffs)
 
 			diffArray = append(diffArray, item)
