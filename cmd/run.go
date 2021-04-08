@@ -102,7 +102,10 @@ prodConfigChecker run acm-bpay-api`,
 			diffArray = append(diffArray, item)
 		}
 
-		writeHtmlFile(diffArray, appName)
+		outputFileName := writeHtmlFile(diffArray, appName)
+
+		fmt.Println(string(colorBlue), "=====================================")
+		fmt.Println("HTML output file : " + outputFileName)
 	},
 }
 
@@ -120,7 +123,7 @@ func init() {
 	// runCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
 
-func writeHtmlFile(diffArray []ConfigDiffItem, appName string) {
+func writeHtmlFile(diffArray []ConfigDiffItem, appName string) string {
 
 	var sb strings.Builder
 	sb.WriteString("<h2>" + appName + " - config diff report &#128203;</h2>")
@@ -142,7 +145,10 @@ func writeHtmlFile(diffArray []ConfigDiffItem, appName string) {
 			sb.WriteString("<hr>")
 		}
 
-	ioutil.WriteFile(appName + "_config_diff.html", []byte(sb.String()), 0644)
+	outputFileName := appName + "_config_diff.html"
+	ioutil.WriteFile(outputFileName, []byte(sb.String()), 0644)
+	
+	return outputFileName
 }
 
 type ConfigDiffItem struct {
