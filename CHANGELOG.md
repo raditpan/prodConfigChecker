@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.4.0] - 2021-04-08
+### Added
+- Repo path option
+- Output file name in console
+
 ## [0.3.1] - 2021-04-03
 ### Fixed
 - Fix somes json lines are missing in html output

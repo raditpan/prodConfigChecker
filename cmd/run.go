@@ -37,6 +37,8 @@ import (
 	"github.com/sergi/go-diff/diffmatchpatch"
 )
 
+var repo string
+
 // runCmd represents the run command
 var runCmd = &cobra.Command{
 	Use:   "run",
@@ -44,7 +46,8 @@ var runCmd = &cobra.Command{
 	Long: `Compare production config with qa config by specifying the name of application to compare
 	 For example:
 
-prodConfigChecker run acm-bpay-api`,
+prodConfigChecker run acm-bpay-api
+prodConfigChecker run acm-bpay-api --repo <absolute path to your config repo>`,
 	Run: func(cmd *cobra.Command, args []string) {
 		colorBlue := "\033[34m"
 		colorReset := "\033[0m"
@@ -52,8 +55,13 @@ prodConfigChecker run acm-bpay-api`,
 		fmt.Println(string(colorBlue), "app name to check : " + args[0])
 
 		appName := args[0]
-		configRepoPath := viper.GetString("configRepoPath")
 
+		var configRepoPath string
+		if len(repo) > 0 {
+			configRepoPath = repo
+		} else {
+			configRepoPath = viper.GetString("configRepoPath")
+		}
 
 		files, err := ioutil.ReadDir(configRepoPath + "/production/" + appName)
 		if err != nil {
@@ -117,6 +125,8 @@ func init() {
 	// Cobra supports Persistent Flags which will work for this command
 	// and all subcommands, e.g.:
 	// runCmd.PersistentFlags().String("foo", "", "A help for foo")
+
+	rootCmd.PersistentFlags().StringVar(&repo, "repo", "", "Absolute path to your config repo")
 
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
