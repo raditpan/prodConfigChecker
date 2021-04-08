@@ -33,7 +33,7 @@ Run the command:
 prodConfigChecker run <app_name>
 
 // run with repo path option
-prodConfigChecker run acm-bpay-api --repo <absolute path to your config repo>
+prodConfigChecker run <app_name> --repo <absolute path to your config repo>
 
 // run with custom config file
 prodConfigChecker run <app_name> --config custom-config.yaml
