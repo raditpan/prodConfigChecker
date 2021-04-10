@@ -33,7 +33,7 @@ var rootCmd = &cobra.Command{
 	Long: `A tool for comparing prod config with qa config to reduce human error when 
 	working with config files in multiple environments. Example command:
 
-	prodConfigChecker run acm-bpay-api`,
+	prodConfigChecker run <app name>`,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
 	// Run: func(cmd *cobra.Command, args []string) { },

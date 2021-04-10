@@ -28,6 +28,8 @@ import (
 
 	"strconv"
 
+	"errors"
+
 	"path/filepath"
 
 	"github.com/spf13/cobra"
@@ -47,8 +49,14 @@ var runCmd = &cobra.Command{
 	Long: `Compare production config with qa config by specifying the name of application to compare
 	 For example:
 
-prodConfigChecker run acm-bpay-api
-prodConfigChecker run acm-bpay-api --repo <absolute path to your config repo>`,
+prodConfigChecker run <app name>
+prodConfigChecker run <app name> --repo <absolute path to your config repo>`,
+	Args: func(cmd *cobra.Command, args []string) error {
+		if len(args) < 1 {
+			return errors.New("requires app name argument")
+		}
+		return nil
+	},
 	Run: func(cmd *cobra.Command, args []string) {
 		colorBlue := "\033[34m"
 		colorReset := "\033[0m"
