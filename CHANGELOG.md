@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.0] - 2021-04-10
+### Added
+- Silent mode to turn off diff in console
+- Argument validator
+### Changed
+- Extract html functions to new file
+
 ## [0.4.0] - 2021-04-08
 ### Added
 - Repo path option
