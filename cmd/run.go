@@ -38,6 +38,7 @@ import (
 )
 
 var repo string
+var silentMode bool
 
 // runCmd represents the run command
 var runCmd = &cobra.Command{
@@ -96,9 +97,11 @@ prodConfigChecker run acm-bpay-api --repo <absolute path to your config repo>`,
 				continue
 			}
 
-			fmt.Println(string(colorBlue), "=====================================")
-			fmt.Println(string(colorBlue), f.Name() + " config files diff : ", string(colorReset))
-			fmt.Println(dmp.DiffPrettyText(diffs))
+			if(!silentMode) {
+				fmt.Println(string(colorBlue), "=====================================")
+				fmt.Println(string(colorBlue), f.Name() + " config files diff : ", string(colorReset))
+				fmt.Println(dmp.DiffPrettyText(diffs))
+			}
 
 			fileExtension := filepath.Ext(f.Name())
 			shouldFixTab := fileExtension == ".yml" || fileExtension == ".yaml"
@@ -127,6 +130,7 @@ func init() {
 	// runCmd.PersistentFlags().String("foo", "", "A help for foo")
 
 	rootCmd.PersistentFlags().StringVar(&repo, "repo", "", "Absolute path to your config repo")
+	rootCmd.PersistentFlags().BoolVarP(&silentMode, "silent", "s", false, "Silence diff result in console output")
 
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
