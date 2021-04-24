@@ -75,6 +75,7 @@ prodConfigChecker run <app name> --repo <absolute path to your config repo>`,
 
 		for _, f := range files {
 			if strings.HasPrefix(f.Name(), ".") {
+				// skip system files with '.' as prefix
 				continue
 			}
 
@@ -95,7 +96,7 @@ prodConfigChecker run <app name> --repo <absolute path to your config repo>`,
 			diffs := dmp.DiffMain(qaFileString, prodFileString, false)
 
 			if len(diffs) == 1 {
-				// skip the file for no diff case
+				// skip the file for when there's no diff case
 				continue
 			}
 
