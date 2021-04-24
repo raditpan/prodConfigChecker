@@ -81,18 +81,10 @@ prodConfigChecker run <app name> --repo <absolute path to your config repo>`,
 
 			var item ConfigDiffItem
 
-			prod, err := ioutil.ReadFile(configRepoPath + "/production/" + appName + "/" + f.Name())
-			if err != nil{
-				panic(err)
-			}
-			qa, err2 := ioutil.ReadFile(configRepoPath + "/qa/" + appName + "/" + f.Name())
-			if err2 != nil{
-				panic(err2)
-			}
-			qaFileString := string(qa[:])
-			prodFileString := string(prod[:])
-			dmp := diffmatchpatch.New()
+			qaFileString := getFileContent(configRepoPath, "qa", appName, f.Name())
+			prodFileString := getFileContent(configRepoPath, "production", appName, f.Name())
 
+			dmp := diffmatchpatch.New()
 			diffs := dmp.DiffMain(qaFileString, prodFileString, false)
 
 			if len(diffs) == 1 {
@@ -121,6 +113,16 @@ prodConfigChecker run <app name> --repo <absolute path to your config repo>`,
 		fmt.Println(string(colorBlue), "=====================================")
 		fmt.Println("HTML output file : " + outputFileName)
 	},
+}
+
+func getFileContent(configRepoPath string, envName string, appName string, fileName string) string {
+	byteContent, err2 := ioutil.ReadFile(configRepoPath + "/" + envName + "/" + appName + "/" + fileName)
+	
+	if err2 != nil{
+		panic(err2)
+	}
+	
+	return string(byteContent[:])
 }
 
 func init() {
