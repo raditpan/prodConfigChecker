@@ -2,7 +2,7 @@
 
 <a href='https://github.com/jpoles1/gopherbadger' target='_blank'>![gopherbadger-tag-do-not-edit](https://img.shields.io/badge/Go%20Coverage-63%25-brightgreen.svg?longCache=true&style=flat)</a>
 
-Command line tool for checking diff between prod and qa config, to help reduce human error when working with config files in multiple environments.
+Command line tool for checking diff between prod and qa config, to help reduce human error when working with config files in multiple environments. It also generates HTML diff report to share with others for reviewing process.
 
 Config repo's folder structure that is supported:
 ```
