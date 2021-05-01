@@ -72,10 +72,6 @@ prodConfigChecker run <app name> --repo <absolute path to your config repo>`,
 		diffArray := make([]ConfigDiffItem, 0)
 
 		for _, f := range files {
-			if strings.HasPrefix(f.Name(), ".") {
-				// skip system files with '.' as prefix
-				continue
-			}
 
 			var item ConfigDiffItem
 
@@ -115,11 +111,19 @@ prodConfigChecker run <app name> --repo <absolute path to your config repo>`,
 
 func getFileListInDirectory(configRepoPath string, appName string) []fs.FileInfo{
 	files, err := ioutil.ReadDir(configRepoPath + "/production/" + appName)
+	filtered := []fs.FileInfo{}
 	if err != nil {
 		panic(err)
 	}
 
-	return files
+	for _,f := range files {
+		// filter out system files with '.' as prefix
+        if !strings.HasPrefix(f.Name(), ".") {
+            filtered = append(filtered, f)
+        }
+    }
+
+	return filtered
 }
 
 func getFileContent(configRepoPath string, envName string, appName string, fileName string) string {
