@@ -37,6 +37,9 @@ prodConfigChecker run <app_name> --repo <absolute path to your config repo>
 
 // run with custom config file
 prodConfigChecker run <app_name> --config custom-config.yaml
+
+// run with silent mode, no files diff in console output
+prodConfigChecker run <app_name> -s
 ```
 
 Check the diff output in terminal console. HTML output file is also generated in your current directory, in case you want to share the result with others.
