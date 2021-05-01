@@ -37,6 +37,8 @@ import (
 
 var repo string
 var silentMode bool
+var colorBlue = "\033[34m"
+var colorReset = "\033[0m"
 
 // runCmd represents the run command
 var runCmd = &cobra.Command{
@@ -54,8 +56,6 @@ prodConfigChecker run <app name> --repo <absolute path to your config repo>`,
 		return nil
 	},
 	Run: func(cmd *cobra.Command, args []string) {
-		colorBlue := "\033[34m"
-		colorReset := "\033[0m"
 
 		fmt.Println(string(colorBlue), "app name to check : " + args[0])
 
@@ -63,43 +63,15 @@ prodConfigChecker run <app name> --repo <absolute path to your config repo>`,
 
 		var configRepoPath string
 		if len(repo) > 0 {
+			// use cmd flag first, if available
 			configRepoPath = repo
 		} else {
+			// else use from yaml file in home directoy
 			configRepoPath = viper.GetString("configRepoPath")
 		}
 
 		files := getFileListInDirectory(configRepoPath, appName)
-		diffArray := make([]ConfigDiffItem, 0)
-
-		for _, f := range files {
-
-			var item ConfigDiffItem
-
-			qaFileString := getFileContent(configRepoPath, "qa", appName, f.Name())
-			prodFileString := getFileContent(configRepoPath, "production", appName, f.Name())
-
-			dmp := diffmatchpatch.New()
-			diffs := dmp.DiffMain(qaFileString, prodFileString, false)
-
-			if len(diffs) == 1 {
-				// skip the file for when there's no diff case
-				continue
-			}
-
-			if(!silentMode) {
-				fmt.Println(string(colorBlue), "=====================================")
-				fmt.Println(string(colorBlue), f.Name() + " config files diff : ", string(colorReset))
-				fmt.Println(dmp.DiffPrettyText(diffs))
-			}
-
-			shouldFixTab := isYamlFile(f.Name())
-
-			item.fileName = f.Name()
-			item.diffLeft = DiffPrettyHtmlLeft(diffs, shouldFixTab)
-			item.diffRight = DiffPrettyHtmlRight(diffs, shouldFixTab)
-
-			diffArray = append(diffArray, item)
-		}
+		diffArray := diffConfigFiles(configRepoPath, appName, files, silentMode)
 
 		outputFileName := writeHtmlFile(diffArray, appName)
 
@@ -133,6 +105,43 @@ func getFileContent(configRepoPath string, envName string, appName string, fileN
 	}
 	
 	return string(byteContent[:])
+}
+
+func diffConfigFiles(configRepoPath string, appName string, files []fs.FileInfo, silent bool) []ConfigDiffItem {
+	
+	diffArray := make([]ConfigDiffItem, 0)
+
+	for _, f := range files {
+
+		var item ConfigDiffItem
+
+		qaFileString := getFileContent(configRepoPath, "qa", appName, f.Name())
+		prodFileString := getFileContent(configRepoPath, "production", appName, f.Name())
+
+		dmp := diffmatchpatch.New()
+		diffs := dmp.DiffMain(qaFileString, prodFileString, false)
+
+		if len(diffs) == 1 {
+			// skip the file for when there's no diff case
+			continue
+		}
+
+		if(!silent) {
+			fmt.Println(string(colorBlue), "=====================================")
+			fmt.Println(string(colorBlue), f.Name() + " config files diff : ", string(colorReset))
+			fmt.Println(dmp.DiffPrettyText(diffs))
+		}
+
+		shouldFixTab := isYamlFile(f.Name())
+
+		item.fileName = f.Name()
+		item.diffLeft = DiffPrettyHtmlLeft(diffs, shouldFixTab)
+		item.diffRight = DiffPrettyHtmlRight(diffs, shouldFixTab)
+
+		diffArray = append(diffArray, item)
+	}
+
+	return diffArray
 }
 
 func isYamlFile(fileName string) bool {

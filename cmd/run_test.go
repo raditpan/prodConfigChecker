@@ -39,6 +39,28 @@ func Test_GetFileListInDirectory(t *testing.T) {
 	}
 }
 
+func Test_DiffConfigFiles(t *testing.T) {
+
+	files := getFileListInDirectory("../testdata", "acm-test")
+	result := diffConfigFiles("../testdata", "acm-test", files, true)
+
+	if len(result) != 1 {
+		t.Errorf("Incorrect number of files")
+	}
+
+	if result[0].fileName != "application.yaml" {
+		t.Errorf("Incorrect file name, got: %s", result[0].fileName)
+	}
+
+	if result[0].diffLeft != "<span>testconfig:&nbsp;</span><del style=\"background:#ffb5b5;\">tru</del><span>e</span>" {
+		t.Errorf("Incorrect diff left, got: %s", result[0].diffLeft)
+	}
+
+	if result[0].diffRight != "<span>testconfig:&nbsp;</span><span style=\"background:#d1ffd1;\">fals</span><span>e</span>" {
+		t.Errorf("Incorrect diff left, got: %s", result[0].diffRight)
+	}
+}
+
 func Test_IsYamlFile(t *testing.T) {
 	tests := []struct {
 		name    string // The name of the test
