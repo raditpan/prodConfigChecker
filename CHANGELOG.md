@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.6.2] - 2021-05-01
+### Added
+- date time in HTML output
+
 ## [0.6.1] - 2021-05-01
 ### Added
 - unit tests
