@@ -15,11 +15,11 @@ func Test_DiffPrettyHtmlLeft(t *testing.T) {
 		expected	string
 		fixTab	bool
 	}{
-		{"Delete diff at the end", "test1", "test2", "<span>test</span><del style=\"background:#ffb5b5;\">1</del>", false},
-		{"Delete diff at the start", "yestest", "test", "<del style=\"background:#ffb5b5;\">yes</del><span>test</span>", false},
-		{"Delete diff in the middle", "test123text", "testtext", "<span>test</span><del style=\"background:#ffb5b5;\">123</del><span>text</span>", false},
-		{"Fix space and tabs", " test1", " test2", "<span>&nbsp;test</span><del style=\"background:#ffb5b5;\">1</del>", true},
-		{"Replace newline", "test\n1", "test\n2", "<span>test<br></span><del style=\"background:#ffb5b5;\">1</del>", true},
+		{"Delete diff at the end", "test1", "test2", "<span style=\"word-wrap:break-word\">test</span><del style=\"background:#ffb5b5;\">1</del>", false},
+		{"Delete diff at the start", "yestest", "test", "<del style=\"background:#ffb5b5;\">yes</del><span style=\"word-wrap:break-word\">test</span>", false},
+		{"Delete diff in the middle", "test123text", "testtext", "<span style=\"word-wrap:break-word\">test</span><del style=\"background:#ffb5b5;\">123</del><span style=\"word-wrap:break-word\">text</span>", false},
+		{"Fix space and tabs", " test1", " test2", "<span style=\"word-wrap:break-word\">&nbsp;test</span><del style=\"background:#ffb5b5;\">1</del>", true},
+		{"Replace newline", "test\n1", "test\n2", "<span style=\"word-wrap:break-word\">test<br></span><del style=\"background:#ffb5b5;\">1</del>", true},
 	}
 
 	for _, tt := range tests {
@@ -49,11 +49,11 @@ func Test_DiffPrettyHtmlRight(t *testing.T) {
 		expected	string
 		fixTab	bool
 	}{
-		{"Insert diff at the end", "test1", "test2", "<span>test</span><span style=\"background:#d1ffd1;\">2</span>", false},
-		{"Insert diff at the start", "test", "yestest", "<span style=\"background:#d1ffd1;\">yes</span><span>test</span>", false},
-		{"Insert diff in the middle", "testtext", "test123text", "<span>test</span><span style=\"background:#d1ffd1;\">123</span><span>text</span>", false},
-		{"Fix space and tabs", " test1", " test2", "<span>&nbsp;test</span><span style=\"background:#d1ffd1;\">2</span>", true},
-		{"Replace newline", "test\n1", "test\n2", "<span>test<br></span><span style=\"background:#d1ffd1;\">2</span>", true},
+		{"Insert diff at the end", "test1", "test2", "<span style=\"word-wrap:break-word\">test</span><span style=\"background:#d1ffd1;\">2</span>", false},
+		{"Insert diff at the start", "test", "yestest", "<span style=\"background:#d1ffd1;\">yes</span><span style=\"word-wrap:break-word\">test</span>", false},
+		{"Insert diff in the middle", "testtext", "test123text", "<span style=\"word-wrap:break-word\">test</span><span style=\"background:#d1ffd1;\">123</span><span style=\"word-wrap:break-word\">text</span>", false},
+		{"Fix space and tabs", " test1", " test2", "<span style=\"word-wrap:break-word\">&nbsp;test</span><span style=\"background:#d1ffd1;\">2</span>", true},
+		{"Replace newline", "test\n1", "test\n2", "<span style=\"word-wrap:break-word\">test<br></span><span style=\"background:#d1ffd1;\">2</span>", true},
 	}
 
 	for _, tt := range tests {

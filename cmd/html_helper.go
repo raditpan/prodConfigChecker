@@ -53,7 +53,7 @@ func DiffPrettyHtmlLeft(diffs []diffmatchpatch.Diff, doFixTab bool) string {
 	var buff bytes.Buffer
 	for _, diff := range diffs {
 		text := strings.Replace(html.EscapeString(diff.Text), "\n", "<br>", -1)
-		
+
 		if doFixTab {
 			text = strings.Replace(text, " ", "&nbsp;", -1)
 		}
@@ -64,7 +64,7 @@ func DiffPrettyHtmlLeft(diffs []diffmatchpatch.Diff, doFixTab bool) string {
 			_, _ = buff.WriteString(text)
 			_, _ = buff.WriteString("</del>")
 		case diffmatchpatch.DiffEqual:
-			_, _ = buff.WriteString("<span>")
+			_, _ = buff.WriteString("<span style=\"word-wrap:break-word\">")
 			_, _ = buff.WriteString(text)
 			_, _ = buff.WriteString("</span>")
 		}
@@ -88,7 +88,7 @@ func DiffPrettyHtmlRight(diffs []diffmatchpatch.Diff, doFixTab bool) string {
 			_, _ = buff.WriteString(text)
 			_, _ = buff.WriteString("</span>")
 		case diffmatchpatch.DiffEqual:
-			_, _ = buff.WriteString("<span>")
+			_, _ = buff.WriteString("<span style=\"word-wrap:break-word\">")
 			_, _ = buff.WriteString(text)
 			_, _ = buff.WriteString("</span>")
 		}
