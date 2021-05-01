@@ -22,6 +22,16 @@ func Test_GetFileContentProd(t *testing.T) {
 	}
 }
 
+func Test_GetFileContent_Panic(t *testing.T) {
+	defer func() {
+        if r := recover(); r == nil {
+            t.Errorf("The code did not panic")
+        }
+    }()
+
+	getFileContent("../testdata", "production", "acm-test-2", "application.yaml")
+}
+
 func Test_GetFileListInDirectory(t *testing.T) {
 
 	result := getFileListInDirectory("../testdata", "acm-test")
@@ -37,6 +47,16 @@ func Test_GetFileListInDirectory(t *testing.T) {
 	if result[1].Name() != "config.json" {
 		t.Errorf("Incorrect file name, got: %s", result[0].Name())
 	}
+}
+
+func Test_GetFileListInDirectory_Panic(t *testing.T) {
+	defer func() {
+        if r := recover(); r == nil {
+            t.Errorf("The code did not panic")
+        }
+    }()
+
+	getFileListInDirectory("../testdata", "acm-test-2")
 }
 
 func Test_DiffConfigFiles(t *testing.T) {
