@@ -1,4 +1,7 @@
 # prodConfigChecker
+
+<a href='https://github.com/jpoles1/gopherbadger' target='_blank'>![gopherbadger-tag-do-not-edit](https://img.shields.io/badge/Go%20Coverage-63%25-brightgreen.svg?longCache=true&style=flat)</a>
+
 Command line tool for checking diff between prod and qa config, to help reduce human error when working with config files in multiple environments.
 
 ## Prepare Go enviroment
