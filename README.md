@@ -4,15 +4,15 @@
 
 Command line tool for checking diff between prod and qa config, to help reduce human error when working with config files in multiple environments.
 
-config repo folder structure that is supported:
+Config repo's folder structure that is supported:
 ```
 config-repo
 ├── production
-│   └── app-name
-│       └── application.yml
+│   └── <app-name>
+│       └── <config files>
 ├── qa
-│   └── app-name
-│       └── application.yml
+│   └── <app-name>
+│       └── <config files>
 ```
 
 ## Prepare Go enviroment
@@ -30,13 +30,13 @@ export PATH=${PATH}:$GOBIN
 ```
 
 ## How to run
-install the command line tool:
+Install the command line tool:
 ```
 go get github.com/raditpan/prodConfigChecker
 ```
 
 
-create `.prodConfigChecker.yaml` file in your home directoy with path to your local config repo:
+Create `.prodConfigChecker.yaml` file in your home directoy with path to your local config repo:
 ```
 configRepoPath: "<absolute path to your config repo>"
 ```
