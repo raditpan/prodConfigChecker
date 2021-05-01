@@ -4,7 +4,31 @@ import (
 	"github.com/sergi/go-diff/diffmatchpatch"
 
 	"testing"
+
+	"os"
 )
+
+func Test_WriteHtml(t *testing.T) {
+
+	diffArray := make([]ConfigDiffItem, 0)
+	var item ConfigDiffItem
+	item.fileName = "application.yaml"
+	item.diffLeft = "<span style=\"word-wrap:break-word\">test</span><del style=\"background:#ffb5b5;\">1</del>"
+	item.diffRight = "<span style=\"word-wrap:break-word\">test</span><span style=\"background:#d1ffd1;\">2</span>"
+
+	diffArray = append(diffArray, item)
+
+	result := writeHtmlFile(diffArray, "acm-test")
+
+	if result != "acm-test_config_diff.html" {
+		t.Errorf("Result file name not as expected, got: %s", result)
+	}
+
+	if _, err := os.Stat(result); os.IsNotExist(err) {
+		// path/to/whatever does not exist
+		t.Errorf("output file does not exist")
+	  }
+}
 
 func Test_DiffPrettyHtmlLeft(t *testing.T) {
 
