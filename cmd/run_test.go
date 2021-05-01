@@ -81,6 +81,17 @@ func Test_DiffConfigFiles(t *testing.T) {
 	}
 }
 
+func Test_DiffConfigFiles_NonSilent(t *testing.T) {
+
+	files := getFileListInDirectory("../testdata", "acm-test")
+	result := diffConfigFiles("../testdata", "acm-test", files, false)
+
+	if len(result) != 1 {
+		t.Errorf("Incorrect number of files")
+	}
+}
+
+
 func Test_IsYamlFile(t *testing.T) {
 	tests := []struct {
 		name    string // The name of the test
