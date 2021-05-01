@@ -18,6 +18,8 @@ package cmd
 import (
 	"io/ioutil"
 
+	"io/fs"
+
 	"fmt"
 
 	"strings"
@@ -66,11 +68,7 @@ prodConfigChecker run <app name> --repo <absolute path to your config repo>`,
 			configRepoPath = viper.GetString("configRepoPath")
 		}
 
-		files, err := ioutil.ReadDir(configRepoPath + "/production/" + appName)
-		if err != nil {
-			panic(err)
-		}
-
+		files := getFileListInDirectory(configRepoPath, appName)
 		diffArray := make([]ConfigDiffItem, 0)
 
 		for _, f := range files {
@@ -113,6 +111,15 @@ prodConfigChecker run <app name> --repo <absolute path to your config repo>`,
 		fmt.Println(string(colorBlue), "=====================================")
 		fmt.Println("HTML output file : " + outputFileName)
 	},
+}
+
+func getFileListInDirectory(configRepoPath string, appName string) []fs.FileInfo{
+	files, err := ioutil.ReadDir(configRepoPath + "/production/" + appName)
+	if err != nil {
+		panic(err)
+	}
+
+	return files
 }
 
 func getFileContent(configRepoPath string, envName string, appName string, fileName string) string {
