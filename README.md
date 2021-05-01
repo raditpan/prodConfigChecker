@@ -4,6 +4,17 @@
 
 Command line tool for checking diff between prod and qa config, to help reduce human error when working with config files in multiple environments.
 
+config repo folder structure that is supported:
+```
+config-repo
+├── production
+│   └── app-name
+│       └── application.yml
+├── qa
+│   └── app-name
+│       └── application.yml
+```
+
 ## Prepare Go enviroment
 These are steps to setup your environment to install and run Go package easily.
 First, install Go in your machine:
