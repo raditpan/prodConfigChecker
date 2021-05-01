@@ -34,7 +34,24 @@ func Test_GetFileContent_Panic(t *testing.T) {
 
 func Test_GetFileListInDirectory(t *testing.T) {
 
-	result := getFileListInDirectory("../testdata", "acm-test")
+	result := getFileListInDirectory("../testdata", "production", "acm-test")
+
+	if len(result) != 2 {
+		t.Errorf("Incorrect number of files")
+	}
+
+	if result[0].Name() != "application.yaml" {
+		t.Errorf("Incorrect file name, got: %s", result[0].Name())
+	}
+
+	if result[1].Name() != "config.json" {
+		t.Errorf("Incorrect file name, got: %s", result[0].Name())
+	}
+}
+
+func Test_GetFileListInDirectory_SkipInnerDirectory(t *testing.T) {
+
+	result := getFileListInDirectory("../testdata", "qa", "acm-test")
 
 	if len(result) != 2 {
 		t.Errorf("Incorrect number of files")
@@ -56,12 +73,12 @@ func Test_GetFileListInDirectory_Panic(t *testing.T) {
         }
     }()
 
-	getFileListInDirectory("../testdata", "acm-test-2")
+	getFileListInDirectory("../testdata", "production", "acm-test-2")
 }
 
 func Test_DiffConfigFiles(t *testing.T) {
 
-	files := getFileListInDirectory("../testdata", "acm-test")
+	files := getFileListInDirectory("../testdata", "production", "acm-test")
 	result := diffConfigFiles("../testdata", "acm-test", files, true)
 
 	if len(result) != 1 {
@@ -83,7 +100,7 @@ func Test_DiffConfigFiles(t *testing.T) {
 
 func Test_DiffConfigFiles_NonSilent(t *testing.T) {
 
-	files := getFileListInDirectory("../testdata", "acm-test")
+	files := getFileListInDirectory("../testdata", "production", "acm-test")
 	result := diffConfigFiles("../testdata", "acm-test", files, false)
 
 	if len(result) != 1 {

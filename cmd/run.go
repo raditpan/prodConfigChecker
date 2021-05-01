@@ -70,7 +70,7 @@ prodConfigChecker run <app name> --repo <absolute path to your config repo>`,
 			configRepoPath = viper.GetString("configRepoPath")
 		}
 
-		files := getFileListInDirectory(configRepoPath, appName)
+		files := getFileListInDirectory(configRepoPath, "production", appName)
 		diffArray := diffConfigFiles(configRepoPath, appName, files, silentMode)
 
 		outputFileName := writeHtmlFile(diffArray, appName)
@@ -80,8 +80,8 @@ prodConfigChecker run <app name> --repo <absolute path to your config repo>`,
 	},
 }
 
-func getFileListInDirectory(configRepoPath string, appName string) []fs.FileInfo{
-	files, err := ioutil.ReadDir(configRepoPath + "/production/" + appName)
+func getFileListInDirectory(configRepoPath string, envName string, appName string) []fs.FileInfo{
+	files, err := ioutil.ReadDir(configRepoPath + "/" + envName + "/" + appName)
 	filtered := []fs.FileInfo{}
 	if err != nil {
 		panic(err)
@@ -89,7 +89,7 @@ func getFileListInDirectory(configRepoPath string, appName string) []fs.FileInfo
 
 	for _,f := range files {
 		// filter out system files with '.' as prefix
-        if !strings.HasPrefix(f.Name(), ".") {
+        if !strings.HasPrefix(f.Name(), ".") && !f.IsDir() {
             filtered = append(filtered, f)
         }
     }
