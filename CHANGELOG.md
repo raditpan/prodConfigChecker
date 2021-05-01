@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.6.0] - 2021-05-01
+### Added
+- unit tests
+- coverage badge
+### Changed
+- refactor codes for unit tests
+
 ## [0.5.0] - 2021-04-10
 ### Added
 - Silent mode to turn off diff in console
