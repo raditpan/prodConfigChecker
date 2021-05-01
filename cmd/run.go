@@ -92,8 +92,7 @@ prodConfigChecker run <app name> --repo <absolute path to your config repo>`,
 				fmt.Println(dmp.DiffPrettyText(diffs))
 			}
 
-			fileExtension := filepath.Ext(f.Name())
-			shouldFixTab := fileExtension == ".yml" || fileExtension == ".yaml"
+			shouldFixTab := isYamlFile(f.Name())
 
 			item.fileName = f.Name()
 			item.diffLeft = DiffPrettyHtmlLeft(diffs, shouldFixTab)
@@ -134,6 +133,11 @@ func getFileContent(configRepoPath string, envName string, appName string, fileN
 	}
 	
 	return string(byteContent[:])
+}
+
+func isYamlFile(fileName string) bool {
+	fileExtension := filepath.Ext(fileName)
+	return fileExtension == ".yml" || fileExtension == ".yaml"
 }
 
 func init() {

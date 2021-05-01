@@ -38,3 +38,23 @@ func Test_GetFileListInDirectory(t *testing.T) {
 		t.Errorf("Incorrect file name, got: %s", result[0].Name())
 	}
 }
+
+func Test_IsYamlFile(t *testing.T) {
+	tests := []struct {
+		name    string // The name of the test
+		fileName	string
+		expected	bool
+	}{
+		{"Not yaml file", "application.json", false},
+		{"yaml file", "application.yaml", true},
+		{"yml file", "application.yml", true},
+	}
+
+	for _, tt := range tests {
+		result := isYamlFile(tt.fileName)
+
+		if result != tt.expected {
+			t.Errorf("Result not as expected, got: %t", result)
+		}
+	}
+}
