@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.6.1] - 2021-05-01
+### Added
+- unit tests
+### Fixed
+- line not broken in HTML output for long text with comma
+
 ## [0.6.0] - 2021-05-01
 ### Added
 - unit tests
