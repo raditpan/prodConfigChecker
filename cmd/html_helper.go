@@ -12,13 +12,18 @@ import (
 	"strconv"
 
 	"github.com/sergi/go-diff/diffmatchpatch"
+
+	"time"
 )
 
 func writeHtmlFile(diffArray []ConfigDiffItem, appName string) string {
 
 	var sb strings.Builder
+	currentTime := time.Now()
+	
 	sb.WriteString("<h2>" + appName + " - config diff report &#128203;</h2>")
-	sb.WriteString("<div> number of diff files : " + strconv.Itoa(len(diffArray)) + "</div>")
+	sb.WriteString("<div> Run date-time : " + currentTime.Format("02-Jan-2006 15:04:05") + "</div>")
+	sb.WriteString("<div> Number of diff files : " + strconv.Itoa(len(diffArray)) + "</div>")
 	sb.WriteString("<hr>");
 
 		for _, htmlDiff := range diffArray {
