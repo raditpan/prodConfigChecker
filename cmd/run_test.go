@@ -24,10 +24,10 @@ func Test_GetFileContentProd(t *testing.T) {
 
 func Test_GetFileContent_Panic(t *testing.T) {
 	defer func() {
-        if r := recover(); r == nil {
-            t.Errorf("The code did not panic")
-        }
-    }()
+		if r := recover(); r == nil {
+			t.Errorf("The code did not panic")
+		}
+	}()
 
 	getFileContent("../testdata", "production", "acm-test-2", "application.yaml")
 }
@@ -68,10 +68,10 @@ func Test_GetFileListInDirectory_SkipInnerDirectory(t *testing.T) {
 
 func Test_GetFileListInDirectory_Panic(t *testing.T) {
 	defer func() {
-        if r := recover(); r == nil {
-            t.Errorf("The code did not panic")
-        }
-    }()
+		if r := recover(); r == nil {
+			t.Errorf("The code did not panic")
+		}
+	}()
 
 	getFileListInDirectory("../testdata", "production", "acm-test-2")
 }
@@ -108,12 +108,11 @@ func Test_DiffConfigFiles_NonSilent(t *testing.T) {
 	}
 }
 
-
 func Test_IsYamlFile(t *testing.T) {
 	tests := []struct {
-		name    string // The name of the test
-		fileName	string
-		expected	bool
+		name     string // The name of the test
+		fileName string
+		expected bool
 	}{
 		{"Not yaml file", "application.json", false},
 		{"yaml file", "application.yaml", true},

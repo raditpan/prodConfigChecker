@@ -57,7 +57,7 @@ prodConfigChecker run <app name> --repo <absolute path to your config repo>`,
 	},
 	Run: func(cmd *cobra.Command, args []string) {
 
-		fmt.Println(string(colorBlue), "app name to check : " + args[0])
+		fmt.Println(string(colorBlue), "app name to check : "+args[0])
 
 		appName := args[0]
 
@@ -80,35 +80,35 @@ prodConfigChecker run <app name> --repo <absolute path to your config repo>`,
 	},
 }
 
-func getFileListInDirectory(configRepoPath string, envName string, appName string) []fs.FileInfo{
+func getFileListInDirectory(configRepoPath string, envName string, appName string) []fs.FileInfo {
 	files, err := ioutil.ReadDir(configRepoPath + "/" + envName + "/" + appName)
 	filtered := []fs.FileInfo{}
 	if err != nil {
 		panic(err)
 	}
 
-	for _,f := range files {
+	for _, f := range files {
 		// filter out system files with '.' as prefix
-        if !strings.HasPrefix(f.Name(), ".") && !f.IsDir() {
-            filtered = append(filtered, f)
-        }
-    }
+		if !strings.HasPrefix(f.Name(), ".") && !f.IsDir() {
+			filtered = append(filtered, f)
+		}
+	}
 
 	return filtered
 }
 
 func getFileContent(configRepoPath string, envName string, appName string, fileName string) string {
 	byteContent, err2 := ioutil.ReadFile(configRepoPath + "/" + envName + "/" + appName + "/" + fileName)
-	
-	if err2 != nil{
+
+	if err2 != nil {
 		panic(err2)
 	}
-	
+
 	return string(byteContent[:])
 }
 
 func diffConfigFiles(configRepoPath string, appName string, files []fs.FileInfo, silent bool) []ConfigDiffItem {
-	
+
 	diffArray := make([]ConfigDiffItem, 0)
 
 	for _, f := range files {
@@ -126,9 +126,9 @@ func diffConfigFiles(configRepoPath string, appName string, files []fs.FileInfo,
 			continue
 		}
 
-		if(!silent) {
+		if !silent {
 			fmt.Println(string(colorBlue), "=====================================")
-			fmt.Println(string(colorBlue), f.Name() + " config files diff : ", string(colorReset))
+			fmt.Println(string(colorBlue), f.Name()+" config files diff : ", string(colorReset))
 			fmt.Println(dmp.DiffPrettyText(diffs))
 		}
 

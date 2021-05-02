@@ -27,17 +27,17 @@ func Test_WriteHtml(t *testing.T) {
 	if _, err := os.Stat(result); os.IsNotExist(err) {
 		// path/to/whatever does not exist
 		t.Errorf("output file does not exist")
-	  }
+	}
 }
 
 func Test_DiffPrettyHtmlLeft(t *testing.T) {
 
 	tests := []struct {
-		name    string // The name of the test
-		text1	string
-		text2	string
-		expected	string
-		fixTab	bool
+		name     string // The name of the test
+		text1    string
+		text2    string
+		expected string
+		fixTab   bool
 	}{
 		{"Delete diff at the end", "test1", "test2", "<span style=\"word-wrap:break-word\">test</span><del style=\"background:#ffb5b5;\">1</del>", false},
 		{"Delete diff at the start", "yestest", "test", "<del style=\"background:#ffb5b5;\">yes</del><span style=\"word-wrap:break-word\">test</span>", false},
@@ -67,11 +67,11 @@ func Test_DiffPrettyHtmlLeft(t *testing.T) {
 func Test_DiffPrettyHtmlRight(t *testing.T) {
 
 	tests := []struct {
-		name    string // The name of the test
-		text1	string
-		text2	string
-		expected	string
-		fixTab	bool
+		name     string // The name of the test
+		text1    string
+		text2    string
+		expected string
+		fixTab   bool
 	}{
 		{"Insert diff at the end", "test1", "test2", "<span style=\"word-wrap:break-word\">test</span><span style=\"background:#d1ffd1;\">2</span>", false},
 		{"Insert diff at the start", "test", "yestest", "<span style=\"background:#d1ffd1;\">yes</span><span style=\"word-wrap:break-word\">test</span>", false},
