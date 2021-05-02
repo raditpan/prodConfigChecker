@@ -1,21 +1,28 @@
 # Changelog
 
+## [0.6.3] - 2021-05-02
+### Added
+- Filter out inner directory to prevent breaking diff process
+- Go report badge
+### Changed
+- Format codes with gofmt
+
 ## [0.6.2] - 2021-05-01
 ### Added
-- date time in HTML output
+- Date time in HTML output
 
 ## [0.6.1] - 2021-05-01
 ### Added
-- unit tests
+- Unit tests
 ### Fixed
-- line not broken in HTML output for long text with comma
+- Line not broken in HTML output for long text with comma
 
 ## [0.6.0] - 2021-05-01
 ### Added
-- unit tests
-- coverage badge
+- Unit tests
+- Coverage badge
 ### Changed
-- refactor codes for unit tests
+- Refactor codes for unit tests
 
 ## [0.5.0] - 2021-04-10
 ### Added
