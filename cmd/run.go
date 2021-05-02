@@ -66,7 +66,7 @@ prodConfigChecker run <app name> --repo <absolute path to your config repo>`,
 			// use cmd flag first, if available
 			configRepoPath = repo
 		} else {
-			// else use from yaml file in home directoy
+			// else use from yaml file in home directory
 			configRepoPath = viper.GetString("configRepoPath")
 		}
 
