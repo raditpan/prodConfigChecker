@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.7.1] - 2021-05-15
+### Added
+- Add matched files in diff output
+### Fixed
+- Fix empty space at EOL not hilighted in html
+
 ## [0.7.0] - 2021-05-15
 ### Added
 - Support for app that has unequal number of files in qa and prod
