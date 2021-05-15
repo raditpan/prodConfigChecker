@@ -74,6 +74,28 @@ func Test_GetFileListInDirectory_Panic(t *testing.T) {
 	getFileListInDirectory("../testdata", "production", "acm-test-2")
 }
 
+func Test_MergeFileList(t *testing.T) {
+	qaFiles := getFileListInDirectory("../testdata", "qa", "acm-test")
+	prodFiles := getFileListInDirectory("../testdata", "production", "acm-test")
+	
+	result := mergeFileList(qaFiles, prodFiles)
+
+	if len(result) != 3 {
+		t.Errorf("Incorrect number of files")
+	}
+
+	exist := false
+	for _, f := range result {
+		if f.Name() == "qa-application.yaml" {
+			exist = true
+		}
+	}
+
+	if !exist {
+		t.Errorf("qa-only config not exist after merging")
+	}
+}
+
 func Test_DiffConfigFiles(t *testing.T) {
 
 	files := getFileListInDirectory("../testdata", "production", "acm-test")

@@ -1,6 +1,6 @@
 # prodConfigChecker
 
-<a href='https://github.com/jpoles1/gopherbadger' target='_blank'>![gopherbadger-tag-do-not-edit](https://img.shields.io/badge/Go%20Coverage-90%25-brightgreen.svg?longCache=true&style=flat)</a>
+<a href='https://github.com/jpoles1/gopherbadger' target='_blank'>![gopherbadger-tag-do-not-edit](https://img.shields.io/badge/Go%20Coverage-87%25-brightgreen.svg?longCache=true&style=flat)</a>
 [![Go Report Card](https://goreportcard.com/badge/github.com/raditpan/prodConfigChecker)](https://goreportcard.com/report/github.com/raditpan/prodConfigChecker)
 
 Command line tool for checking diff between prod and qa config, to help reduce human error when working with config files in multiple environments. It also generates HTML diff report to share with others for reviewing process.
