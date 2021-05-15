@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.7.0] - 2021-05-15
+### Added
+- Support for app that has unequal number of files in qa and prod
+
 ## [0.6.3] - 2021-05-02
 ### Added
 - Filter out inner directory to prevent breaking diff process
