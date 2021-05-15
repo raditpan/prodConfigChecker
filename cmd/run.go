@@ -70,7 +70,9 @@ prodConfigChecker run <app name> --repo <absolute path to your config repo>`,
 			configRepoPath = viper.GetString("configRepoPath")
 		}
 
-		files := getFileListInDirectory(configRepoPath, "qa", appName)
+		qaFiles := getFileListInDirectory(configRepoPath, "qa", appName)
+		prodFiles := getFileListInDirectory(configRepoPath, "production", appName)
+		files := mergeFileList(qaFiles, prodFiles)
 		diffArray := diffConfigFiles(configRepoPath, appName, files, silentMode)
 
 		outputFileName := writeHtmlFile(diffArray, appName)
@@ -107,6 +109,23 @@ func getFileContent(configRepoPath string, envName string, appName string, fileN
 	return string(byteContent[:])
 }
 
+func mergeFileList(first []fs.FileInfo, second []fs.FileInfo) []fs.FileInfo{
+	for _, f := range first {
+        exist := false
+        for _, s := range second {
+            if f.Name() == s.Name() {
+                exist = true
+                break
+            }
+        }
+        if !exist {
+            second = append(second, f)
+        }
+    }
+
+	return second
+}
+
 func diffConfigFiles(configRepoPath string, appName string, files []fs.FileInfo, silent bool) []ConfigDiffItem {
 
 	diffArray := make([]ConfigDiffItem, 0)
@@ -126,8 +145,6 @@ func diffConfigFiles(configRepoPath string, appName string, files []fs.FileInfo,
 			continue
 		}
 
-		fmt.Println(diffs)
-
 		if !silent {
 			fmt.Println(string(colorBlue), "=====================================")
 			fmt.Println(string(colorBlue), f.Name()+" config files diff : ", string(colorReset))
@@ -139,8 +156,13 @@ func diffConfigFiles(configRepoPath string, appName string, files []fs.FileInfo,
 		item.fileName = f.Name()
 
 		if len(diffs) == 1 && diffs[0].Type == diffmatchpatch.DiffDelete {
+			// case where there's only file on QA, but not in Prod
 			item.diffLeft = SimpleDiffFormat(diffs[0])
-			item.diffRight = "<span style=\"color:red\">No file available</span>"
+			item.diffRight = "<span style=\"color:red\">&#9888; No file available</span>"
+		} else if len(diffs) == 1 && diffs[0].Type == diffmatchpatch.DiffInsert {
+			// case where there's only file on Prod, but not in QA
+			item.diffLeft = "<span style=\"color:red\">&#9888; No file available</span>"
+			item.diffRight = SimpleDiffFormat(diffs[0])
 		} else {
 			item.diffLeft = DiffPrettyHtmlLeft(diffs, shouldFixTab)
 			item.diffRight = DiffPrettyHtmlRight(diffs, shouldFixTab)
