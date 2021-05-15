@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.7.2] - 2021-05-15
+### Changed
+- Improve emoji in HTML output
+
 ## [0.7.1] - 2021-05-15
 ### Added
 - Add matched files in diff output

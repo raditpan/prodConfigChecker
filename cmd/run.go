@@ -163,10 +163,10 @@ func diffConfigFiles(configRepoPath string, appName string, files []fs.FileInfo,
 		if len(diffs) == 1 && diffs[0].Type == diffmatchpatch.DiffDelete {
 			// case where there's only file on QA, but not in Prod
 			item.diffLeft = SimpleDiffFormat(diffs[0])
-			item.diffRight = "<span style=\"color:red\">&#9888; No file available</span>"
+			item.diffRight = "<span style=\"color:red\">⚠️ No file available</span>"
 		} else if len(diffs) == 1 && diffs[0].Type == diffmatchpatch.DiffInsert {
 			// case where there's only file on Prod, but not in QA
-			item.diffLeft = "<span style=\"color:red\">&#9888; No file available</span>"
+			item.diffLeft = "<span style=\"color:red\">⚠️ No file available</span>"
 			item.diffRight = SimpleDiffFormat(diffs[0])
 		} else {
 			item.diffLeft = DiffPrettyHtmlLeft(diffs, shouldFixTab)
