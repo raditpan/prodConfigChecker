@@ -79,7 +79,7 @@ func DiffPrettyHtmlLeft(diffs []diffmatchpatch.Diff, doFixTab bool) string {
 	for _, diff := range diffs {
 		text := strings.Replace(html.EscapeString(diff.Text), "\n", "<br>", -1)
 
-		if doFixTab {
+		if doFixTab || strings.TrimSpace(text) == "" {
 			text = strings.Replace(text, " ", "&nbsp;", -1)
 		}
 
@@ -102,7 +102,7 @@ func DiffPrettyHtmlRight(diffs []diffmatchpatch.Diff, doFixTab bool) string {
 	for _, diff := range diffs {
 		text := strings.Replace(html.EscapeString(diff.Text), "\n", "<br>", -1)
 
-		if doFixTab {
+		if doFixTab || strings.TrimSpace(text) == "" {
 			text = strings.Replace(text, " ", "&nbsp;", -1)
 		}
 
