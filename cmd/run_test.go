@@ -101,7 +101,7 @@ func Test_DiffConfigFiles(t *testing.T) {
 	files := getFileListInDirectory("../testdata", "production", "acm-test")
 	result := diffConfigFiles("../testdata", "acm-test", files, true)
 
-	if len(result) != 1 {
+	if len(result) != 2 {
 		t.Errorf("Incorrect number of files")
 	}
 
@@ -116,6 +116,14 @@ func Test_DiffConfigFiles(t *testing.T) {
 	if result[0].diffRight != "<span style=\"word-wrap:break-word\">testconfig:&nbsp;</span><span style=\"background:#d1ffd1;\">fals</span><span style=\"word-wrap:break-word\">e</span>" {
 		t.Errorf("Incorrect diff left, got: %s", result[0].diffRight)
 	}
+
+	if result[1].fileName != "config.json" {
+		t.Errorf("Incorrect file name, got: %s", result[1].fileName)
+	}
+
+	if !result[1].noDiff {
+		t.Errorf("Unexpected diff in config.json")
+	}
 }
 
 func Test_DiffConfigFiles_NonSilent(t *testing.T) {
@@ -123,7 +131,7 @@ func Test_DiffConfigFiles_NonSilent(t *testing.T) {
 	files := getFileListInDirectory("../testdata", "production", "acm-test")
 	result := diffConfigFiles("../testdata", "acm-test", files, false)
 
-	if len(result) != 1 {
+	if len(result) != 2 {
 		t.Errorf("Incorrect number of files")
 	}
 }

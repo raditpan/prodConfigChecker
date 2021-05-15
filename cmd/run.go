@@ -142,13 +142,18 @@ func diffConfigFiles(configRepoPath string, appName string, files []fs.FileInfo,
 
 		if len(diffs) == 1 && diffs[0].Type == diffmatchpatch.DiffEqual {
 			// skip the file for when there's no diff case
-			continue
+			item.noDiff = true
 		}
 
 		if !silent {
 			fmt.Println(string(colorBlue), "=====================================")
-			fmt.Println(string(colorBlue), f.Name()+" config files diff : ", string(colorReset))
-			fmt.Println(dmp.DiffPrettyText(diffs))
+
+			if item.noDiff {
+				fmt.Println(string(colorBlue), f.Name()+" has no diff ", string(colorReset))
+			} else {
+				fmt.Println(string(colorBlue), f.Name()+" config files diff : ", string(colorReset))
+				fmt.Println(dmp.DiffPrettyText(diffs))
+			}
 		}
 
 		shouldFixTab := isYamlFile(f.Name())

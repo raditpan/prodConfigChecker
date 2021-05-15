@@ -21,12 +21,28 @@ func writeHtmlFile(diffArray []ConfigDiffItem, appName string) string {
 	var sb strings.Builder
 	currentTime := time.Now()
 
+	var diffCount int
+	for _, htmlDiff := range diffArray {
+		if !htmlDiff.noDiff {
+			diffCount++
+		}
+	}
+
 	sb.WriteString("<h2>" + appName + " - config diff report &#128203;</h2>")
 	sb.WriteString("<div> Run date-time : " + currentTime.Format("02-Jan-2006 15:04:05") + "</div>")
-	sb.WriteString("<div> Number of diff files : " + strconv.Itoa(len(diffArray)) + "</div>")
+	sb.WriteString("<div> Number of files : " + strconv.Itoa(len(diffArray)) + "</div>")
+	sb.WriteString("<div> Number of diff files : " + strconv.Itoa(diffCount) + "</div>")
 	sb.WriteString("<hr>")
 
 	for _, htmlDiff := range diffArray {
+		if htmlDiff.noDiff {
+			sb.WriteString("<div style=\"overflow: auto;\">")
+			sb.WriteString("<h3>" + htmlDiff.fileName + " - no diff </h3>")
+			sb.WriteString("</div>")
+			sb.WriteString("<hr>")
+			continue
+		}
+
 		sb.WriteString("<div style=\"overflow: auto;\">")
 		sb.WriteString("<h3>" + htmlDiff.fileName + " : </h3><br>")
 		sb.WriteString("<div style=\"float: left;width: 48%; border-right: 2px solid #808080;\">")
@@ -51,6 +67,7 @@ type ConfigDiffItem struct {
 	fileName  string
 	diffLeft  string
 	diffRight string
+	noDiff  bool
 }
 
 func SimpleDiffFormat(diff diffmatchpatch.Diff) string {
