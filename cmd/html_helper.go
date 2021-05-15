@@ -53,6 +53,10 @@ type ConfigDiffItem struct {
 	diffRight string
 }
 
+func SimpleDiffFormat(diff diffmatchpatch.Diff) string {
+	return strings.Replace(html.EscapeString(diff.Text), "\n", "<br>", -1)
+}
+
 func DiffPrettyHtmlLeft(diffs []diffmatchpatch.Diff, doFixTab bool) string {
 	var buff bytes.Buffer
 	for _, diff := range diffs {

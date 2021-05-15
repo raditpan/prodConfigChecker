@@ -70,7 +70,7 @@ prodConfigChecker run <app name> --repo <absolute path to your config repo>`,
 			configRepoPath = viper.GetString("configRepoPath")
 		}
 
-		files := getFileListInDirectory(configRepoPath, "production", appName)
+		files := getFileListInDirectory(configRepoPath, "qa", appName)
 		diffArray := diffConfigFiles(configRepoPath, appName, files, silentMode)
 
 		outputFileName := writeHtmlFile(diffArray, appName)
@@ -101,7 +101,7 @@ func getFileContent(configRepoPath string, envName string, appName string, fileN
 	byteContent, err2 := ioutil.ReadFile(configRepoPath + "/" + envName + "/" + appName + "/" + fileName)
 
 	if err2 != nil {
-		panic(err2)
+		return ""
 	}
 
 	return string(byteContent[:])
@@ -121,10 +121,12 @@ func diffConfigFiles(configRepoPath string, appName string, files []fs.FileInfo,
 		dmp := diffmatchpatch.New()
 		diffs := dmp.DiffMain(qaFileString, prodFileString, false)
 
-		if len(diffs) == 1 {
+		if len(diffs) == 1 && diffs[0].Type == diffmatchpatch.DiffEqual {
 			// skip the file for when there's no diff case
 			continue
 		}
+
+		fmt.Println(diffs)
 
 		if !silent {
 			fmt.Println(string(colorBlue), "=====================================")
@@ -135,8 +137,14 @@ func diffConfigFiles(configRepoPath string, appName string, files []fs.FileInfo,
 		shouldFixTab := isYamlFile(f.Name())
 
 		item.fileName = f.Name()
-		item.diffLeft = DiffPrettyHtmlLeft(diffs, shouldFixTab)
-		item.diffRight = DiffPrettyHtmlRight(diffs, shouldFixTab)
+
+		if len(diffs) == 1 && diffs[0].Type == diffmatchpatch.DiffDelete {
+			item.diffLeft = SimpleDiffFormat(diffs[0])
+			item.diffRight = "<span style=\"color:red\">No file available</span>"
+		} else {
+			item.diffLeft = DiffPrettyHtmlLeft(diffs, shouldFixTab)
+			item.diffRight = DiffPrettyHtmlRight(diffs, shouldFixTab)
+		}
 
 		diffArray = append(diffArray, item)
 	}

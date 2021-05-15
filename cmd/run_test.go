@@ -22,14 +22,12 @@ func Test_GetFileContentProd(t *testing.T) {
 	}
 }
 
-func Test_GetFileContent_Panic(t *testing.T) {
-	defer func() {
-		if r := recover(); r == nil {
-			t.Errorf("The code did not panic")
-		}
-	}()
+func Test_GetFileContent_NoFile_ReturnEmptyString(t *testing.T) {
+	result := getFileContent("../testdata", "production", "acm-test-2", "application.yaml")
 
-	getFileContent("../testdata", "production", "acm-test-2", "application.yaml")
+	if result != "" {
+		t.Errorf("Result file content not as empty, got: %s", result)
+	}
 }
 
 func Test_GetFileListInDirectory(t *testing.T) {
@@ -53,7 +51,7 @@ func Test_GetFileListInDirectory_SkipInnerDirectory(t *testing.T) {
 
 	result := getFileListInDirectory("../testdata", "qa", "acm-test")
 
-	if len(result) != 2 {
+	if len(result) != 3 {
 		t.Errorf("Incorrect number of files")
 	}
 
