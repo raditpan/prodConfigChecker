@@ -83,6 +83,11 @@ func DiffPrettyHtmlLeft(diffs []diffmatchpatch.Diff, doFixTab bool) string {
 			text = strings.Replace(text, " ", "&nbsp;", -1)
 		}
 
+		if text == "<br>" {
+			// add space to hilight line removal, because lone <br> inside span will not get background
+			text = "<br>&nbsp;"
+		}
+
 		switch diff.Type {
 		case diffmatchpatch.DiffDelete:
 			_, _ = buff.WriteString("<del style=\"background:#ffb5b5;\">")
@@ -104,6 +109,11 @@ func DiffPrettyHtmlRight(diffs []diffmatchpatch.Diff, doFixTab bool) string {
 
 		if doFixTab || strings.TrimSpace(text) == "" {
 			text = strings.Replace(text, " ", "&nbsp;", -1)
+		}
+
+		if text == "<br>" {
+			// add space to hilight line addition, because lone <br> inside span will not get background
+			text = "<br>&nbsp;"
 		}
 
 		switch diff.Type {

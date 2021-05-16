@@ -44,6 +44,7 @@ func Test_DiffPrettyHtmlLeft(t *testing.T) {
 		{"Delete diff in the middle", "test123text", "testtext", "<span style=\"word-wrap:break-word\">test</span><del style=\"background:#ffb5b5;\">123</del><span style=\"word-wrap:break-word\">text</span>", false},
 		{"Fix space and tabs", " test1", " test2", "<span style=\"word-wrap:break-word\">&nbsp;test</span><del style=\"background:#ffb5b5;\">1</del>", true},
 		{"Replace newline", "test\n1", "test\n2", "<span style=\"word-wrap:break-word\">test<br></span><del style=\"background:#ffb5b5;\">1</del>", true},
+		{"Delete empty new line", "test1\n\ntest2", "test1\ntest2", "<span style=\"word-wrap:break-word\">test1<br></span><del style=\"background:#ffb5b5;\"><br>&nbsp;</del><span style=\"word-wrap:break-word\">test2</span>", false},
 	}
 
 	for _, tt := range tests {
@@ -78,6 +79,7 @@ func Test_DiffPrettyHtmlRight(t *testing.T) {
 		{"Insert diff in the middle", "testtext", "test123text", "<span style=\"word-wrap:break-word\">test</span><span style=\"background:#d1ffd1;\">123</span><span style=\"word-wrap:break-word\">text</span>", false},
 		{"Fix space and tabs", " test1", " test2", "<span style=\"word-wrap:break-word\">&nbsp;test</span><span style=\"background:#d1ffd1;\">2</span>", true},
 		{"Replace newline", "test\n1", "test\n2", "<span style=\"word-wrap:break-word\">test<br></span><span style=\"background:#d1ffd1;\">2</span>", true},
+		{"Insert empty new line", "test1\ntest2", "test1\n\ntest2", "<span style=\"word-wrap:break-word\">test1<br></span><span style=\"background:#d1ffd1;\"><br>&nbsp;</span><span style=\"word-wrap:break-word\">test2</span>", false},
 	}
 
 	for _, tt := range tests {
