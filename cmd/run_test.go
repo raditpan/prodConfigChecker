@@ -6,26 +6,35 @@ import (
 
 func Test_GetFileContentQa(t *testing.T) {
 
-	result := getFileContent("../testdata", "qa", "acm-test", "application.yaml")
+	result, fileExist := getFileContent("../testdata", "qa", "acm-test", "application.yaml")
 
-	if result != "testconfig: true" {
+	if result != "testconfig: true" || !fileExist {
 		t.Errorf("Result file content not as expected, got: %s", result)
 	}
 }
 
 func Test_GetFileContentProd(t *testing.T) {
 
-	result := getFileContent("../testdata", "production", "acm-test", "application.yaml")
+	result, fileExist := getFileContent("../testdata", "production", "acm-test", "application.yaml")
 
-	if result != "testconfig: false" {
+	if result != "testconfig: false" || !fileExist {
+		t.Errorf("Result file content not as expected, got: %s", result)
+	}
+}
+
+func Test_GetFileContentQa_EmptyFile(t *testing.T) {
+
+	result, fileExist := getFileContent("../testdata", "qa", "acm-test", "test.txt")
+
+	if result != "" || !fileExist {
 		t.Errorf("Result file content not as expected, got: %s", result)
 	}
 }
 
 func Test_GetFileContent_NoFile_ReturnEmptyString(t *testing.T) {
-	result := getFileContent("../testdata", "production", "acm-test-2", "application.yaml")
+	result, fileExist := getFileContent("../testdata", "production", "acm-test-2", "application.yaml")
 
-	if result != "" {
+	if result != "" || fileExist {
 		t.Errorf("Result file content not as empty, got: %s", result)
 	}
 }
@@ -51,7 +60,7 @@ func Test_GetFileListInDirectory_SkipInnerDirectory(t *testing.T) {
 
 	result := getFileListInDirectory("../testdata", "qa", "acm-test")
 
-	if len(result) != 3 {
+	if len(result) != 4 {
 		t.Errorf("Incorrect number of files")
 	}
 
@@ -80,7 +89,7 @@ func Test_MergeFileList(t *testing.T) {
 	
 	result := mergeFileList(qaFiles, prodFiles)
 
-	if len(result) != 3 {
+	if len(result) != 4 {
 		t.Errorf("Incorrect number of files")
 	}
 

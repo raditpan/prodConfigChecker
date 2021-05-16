@@ -99,14 +99,15 @@ func getFileListInDirectory(configRepoPath string, envName string, appName strin
 	return filtered
 }
 
-func getFileContent(configRepoPath string, envName string, appName string, fileName string) string {
+func getFileContent(configRepoPath string, envName string, appName string, fileName string) (string, bool) {
 	byteContent, err2 := ioutil.ReadFile(configRepoPath + "/" + envName + "/" + appName + "/" + fileName)
 
 	if err2 != nil {
-		return ""
+		fmt.Println(err2)
+		return "", false
 	}
 
-	return string(byteContent[:])
+	return string(byteContent[:]), true
 }
 
 func mergeFileList(first []fs.FileInfo, second []fs.FileInfo) []fs.FileInfo{
@@ -134,8 +135,12 @@ func diffConfigFiles(configRepoPath string, appName string, files []fs.FileInfo,
 
 		var item ConfigDiffItem
 
-		qaFileString := getFileContent(configRepoPath, "qa", appName, f.Name())
-		prodFileString := getFileContent(configRepoPath, "production", appName, f.Name())
+		if !silent {
+			fmt.Println(string(colorBlue), "=====================================")
+		}
+
+		qaFileString, qafileExist := getFileContent(configRepoPath, "qa", appName, f.Name())
+		prodFileString, prodfileExist := getFileContent(configRepoPath, "production", appName, f.Name())
 
 		dmp := diffmatchpatch.New()
 		diffs := dmp.DiffMain(qaFileString, prodFileString, false)
@@ -146,7 +151,6 @@ func diffConfigFiles(configRepoPath string, appName string, files []fs.FileInfo,
 		}
 
 		if !silent {
-			fmt.Println(string(colorBlue), "=====================================")
 
 			if item.noDiff {
 				fmt.Println(string(colorBlue), f.Name()+" has no diff ", string(colorReset))
@@ -159,15 +163,24 @@ func diffConfigFiles(configRepoPath string, appName string, files []fs.FileInfo,
 		shouldFixTab := isYamlFile(f.Name())
 
 		item.fileName = f.Name()
+		noFileWarningSpan := "<span style=\"color:red\">⚠️ No file available</span>"
 
-		if len(diffs) == 1 && diffs[0].Type == diffmatchpatch.DiffDelete {
+		if qafileExist && !prodfileExist && len(diffs) == 1 && diffs[0].Type == diffmatchpatch.DiffDelete {
 			// case where there's only file on QA, but not in Prod
 			item.diffLeft = SimpleDiffFormat(diffs[0])
-			item.diffRight = "<span style=\"color:red\">⚠️ No file available</span>"
-		} else if len(diffs) == 1 && diffs[0].Type == diffmatchpatch.DiffInsert {
+			item.diffRight = noFileWarningSpan
+		} else if !qafileExist && prodfileExist && len(diffs) == 1 && diffs[0].Type == diffmatchpatch.DiffInsert {
 			// case where there's only file on Prod, but not in QA
-			item.diffLeft = "<span style=\"color:red\">⚠️ No file available</span>"
+			item.diffLeft = noFileWarningSpan
 			item.diffRight = SimpleDiffFormat(diffs[0])
+		}  else if qafileExist && !prodfileExist && qaFileString == "" {
+			// case where there's only file on QA, but not in Prod, and QA file is empty
+			item.diffLeft = ""
+			item.diffRight = noFileWarningSpan
+		} else if !qafileExist && prodfileExist && prodFileString == "" {
+			// case where there's only file on Prod, but not in QA, and Prod file is empty
+			item.diffLeft = noFileWarningSpan
+			item.diffRight = ""
 		} else {
 			item.diffLeft = DiffPrettyHtmlLeft(diffs, shouldFixTab)
 			item.diffRight = DiffPrettyHtmlRight(diffs, shouldFixTab)
