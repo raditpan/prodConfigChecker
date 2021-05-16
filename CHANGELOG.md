@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.7.3] - 2021-05-16
+### Changed
+- Improve empty file and no file handling
+### Fixed
+- Fix empty line removal/add not hilighted
+
 ## [0.7.2] - 2021-05-15
 ### Changed
 - Improve emoji in HTML output
