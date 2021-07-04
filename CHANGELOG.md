@@ -1,4 +1,8 @@
 # Changelog
+## [0.7.4] - 2021-07-04
+### Changed
+- Reformat codes
+- Improve function names export
 
 ## [0.7.3] - 2021-05-16
 ### Changed
