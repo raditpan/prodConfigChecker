@@ -110,19 +110,19 @@ func getFileContent(configRepoPath string, envName string, appName string, fileN
 	return string(byteContent[:]), true
 }
 
-func mergeFileList(first []fs.FileInfo, second []fs.FileInfo) []fs.FileInfo{
+func mergeFileList(first []fs.FileInfo, second []fs.FileInfo) []fs.FileInfo {
 	for _, f := range first {
-        exist := false
-        for _, s := range second {
-            if f.Name() == s.Name() {
-                exist = true
-                break
-            }
-        }
-        if !exist {
-            second = append(second, f)
-        }
-    }
+		exist := false
+		for _, s := range second {
+			if f.Name() == s.Name() {
+				exist = true
+				break
+			}
+		}
+		if !exist {
+			second = append(second, f)
+		}
+	}
 
 	return second
 }
@@ -173,7 +173,7 @@ func diffConfigFiles(configRepoPath string, appName string, files []fs.FileInfo,
 			// case where there's only file on Prod, but not in QA
 			item.diffLeft = noFileWarningSpan
 			item.diffRight = simpleDiffFormat(diffs[0])
-		}  else if qafileExist && !prodfileExist && qaFileString == "" {
+		} else if qafileExist && !prodfileExist && qaFileString == "" {
 			// case where there's only file on QA, but not in Prod, and QA file is empty
 			item.diffLeft = ""
 			item.diffRight = noFileWarningSpan

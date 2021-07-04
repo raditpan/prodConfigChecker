@@ -86,7 +86,7 @@ func Test_GetFileListInDirectory_Panic(t *testing.T) {
 func Test_MergeFileList(t *testing.T) {
 	qaFiles := getFileListInDirectory("../testdata", "qa", "acm-test")
 	prodFiles := getFileListInDirectory("../testdata", "production", "acm-test")
-	
+
 	result := mergeFileList(qaFiles, prodFiles)
 
 	if len(result) != 4 {

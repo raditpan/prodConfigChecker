@@ -67,7 +67,7 @@ type ConfigDiffItem struct {
 	fileName  string
 	diffLeft  string
 	diffRight string
-	noDiff  bool
+	noDiff    bool
 }
 
 func simpleDiffFormat(diff diffmatchpatch.Diff) string {
