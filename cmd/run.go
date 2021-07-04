@@ -167,12 +167,12 @@ func diffConfigFiles(configRepoPath string, appName string, files []fs.FileInfo,
 
 		if qafileExist && !prodfileExist && len(diffs) == 1 && diffs[0].Type == diffmatchpatch.DiffDelete {
 			// case where there's only file on QA, but not in Prod
-			item.diffLeft = SimpleDiffFormat(diffs[0])
+			item.diffLeft = simpleDiffFormat(diffs[0])
 			item.diffRight = noFileWarningSpan
 		} else if !qafileExist && prodfileExist && len(diffs) == 1 && diffs[0].Type == diffmatchpatch.DiffInsert {
 			// case where there's only file on Prod, but not in QA
 			item.diffLeft = noFileWarningSpan
-			item.diffRight = SimpleDiffFormat(diffs[0])
+			item.diffRight = simpleDiffFormat(diffs[0])
 		}  else if qafileExist && !prodfileExist && qaFileString == "" {
 			// case where there's only file on QA, but not in Prod, and QA file is empty
 			item.diffLeft = ""
@@ -182,8 +182,8 @@ func diffConfigFiles(configRepoPath string, appName string, files []fs.FileInfo,
 			item.diffLeft = noFileWarningSpan
 			item.diffRight = ""
 		} else {
-			item.diffLeft = DiffPrettyHtmlLeft(diffs, shouldFixTab)
-			item.diffRight = DiffPrettyHtmlRight(diffs, shouldFixTab)
+			item.diffLeft = diffPrettyHtmlLeft(diffs, shouldFixTab)
+			item.diffRight = diffPrettyHtmlRight(diffs, shouldFixTab)
 		}
 
 		diffArray = append(diffArray, item)

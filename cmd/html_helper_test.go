@@ -52,7 +52,7 @@ func Test_DiffPrettyHtmlLeft(t *testing.T) {
 			dmp := diffmatchpatch.New()
 			diffs := dmp.DiffMain(tt.text1, tt.text2, false)
 
-			result := DiffPrettyHtmlLeft(diffs, tt.fixTab)
+			result := diffPrettyHtmlLeft(diffs, tt.fixTab)
 
 			if len(diffs) == 1 {
 				t.Errorf("Result html diff has no diff")
@@ -87,7 +87,7 @@ func Test_DiffPrettyHtmlRight(t *testing.T) {
 			dmp := diffmatchpatch.New()
 			diffs := dmp.DiffMain(tt.text1, tt.text2, false)
 
-			result := DiffPrettyHtmlRight(diffs, tt.fixTab)
+			result := diffPrettyHtmlRight(diffs, tt.fixTab)
 
 			if len(diffs) == 1 {
 				t.Errorf("Result html diff has no diff")
