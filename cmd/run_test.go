@@ -64,12 +64,19 @@ func Test_GetFileListInDirectory_IncludeInnerDirectory(t *testing.T) {
 		t.Errorf("Incorrect number of files")
 	}
 
-	if result[0].fileInfo.Name() != "application.yaml" {
-		t.Errorf("Incorrect file name, got: %s", result[0].fileInfo.Name())
+	exist := false
+	for _, f := range result {
+		if f.fileInfo.Name() == "rules.js" {
+			exist = true
+
+			if f.parentFolder != "validation-rules" {
+				t.Errorf("parent folder name not correct")
+			}
+		}
 	}
 
-	if result[1].fileInfo.Name() != "config.json" {
-		t.Errorf("Incorrect file name, got: %s", result[0].fileInfo.Name())
+	if !exist {
+		t.Errorf("sub-folder file not included")
 	}
 }
 
