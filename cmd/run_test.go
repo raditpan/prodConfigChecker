@@ -108,7 +108,7 @@ func Test_MergeFileList(t *testing.T) {
 func Test_DiffConfigFiles(t *testing.T) {
 
 	files := getFileListInDirectory("../testdata", "production", "acm-test")
-	result := diffConfigFiles("../testdata", "acm-test", files, true)
+	result := diffConfigFiles("../testdata", "qa", "production", "acm-test", files, true)
 
 	if len(result) != 2 {
 		t.Errorf("Incorrect number of files")
@@ -138,7 +138,7 @@ func Test_DiffConfigFiles(t *testing.T) {
 func Test_DiffConfigFiles_NonSilent(t *testing.T) {
 
 	files := getFileListInDirectory("../testdata", "production", "acm-test")
-	result := diffConfigFiles("../testdata", "acm-test", files, false)
+	result := diffConfigFiles("../testdata", "qa", "production", "acm-test", files, false)
 
 	if len(result) != 2 {
 		t.Errorf("Incorrect number of files")

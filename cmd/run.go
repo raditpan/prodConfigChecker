@@ -84,7 +84,7 @@ prodConfigChecker run <app name> --repo <absolute path to your config repo>`,
 		qaFiles := getFileListInDirectory(configRepoPath, qaFolder, appName)
 		prodFiles := getFileListInDirectory(configRepoPath, prodFolder, appName)
 		files := mergeFileList(qaFiles, prodFiles)
-		diffArray := diffConfigFiles(configRepoPath, appName, files, silentMode)
+		diffArray := diffConfigFiles(configRepoPath, qaFolder, prodFolder, appName, files, silentMode)
 
 		outputFileName := writeHtmlFile(diffArray, appName)
 
@@ -138,7 +138,7 @@ func mergeFileList(first []fs.FileInfo, second []fs.FileInfo) []fs.FileInfo {
 	return second
 }
 
-func diffConfigFiles(configRepoPath string, appName string, files []fs.FileInfo, silent bool) []ConfigDiffItem {
+func diffConfigFiles(configRepoPath string, qaFolder string, prodFolder string, appName string, files []fs.FileInfo, silent bool) []ConfigDiffItem {
 
 	diffArray := make([]ConfigDiffItem, 0)
 
