@@ -43,6 +43,11 @@ var colorReset = "\033[0m"
 var qaFolder string
 var prodFolder string
 
+type ConfigFile struct {
+    fileInfo fs.FileInfo
+    parentFolder string
+}
+
 // runCmd represents the run command
 var runCmd = &cobra.Command{
 	Use:   "run",
@@ -93,9 +98,9 @@ prodConfigChecker run <app name> --repo <absolute path to your config repo>`,
 	},
 }
 
-func getFileListInDirectory(configRepoPath string, envName string, appName string) []fs.FileInfo {
+func getFileListInDirectory(configRepoPath string, envName string, appName string) []ConfigFile {
 	files, err := ioutil.ReadDir(configRepoPath + "/" + envName + "/" + appName)
-	filtered := []fs.FileInfo{}
+	filtered := []ConfigFile{}
 	if err != nil {
 		panic(err)
 	}
@@ -103,7 +108,19 @@ func getFileListInDirectory(configRepoPath string, envName string, appName strin
 	for _, f := range files {
 		// filter out system files with '.' as prefix
 		if !strings.HasPrefix(f.Name(), ".") && !f.IsDir() {
-			filtered = append(filtered, f)
+			var confFile ConfigFile
+			confFile.fileInfo = f
+			filtered = append(filtered, confFile)
+		} else if f.IsDir() {
+			// get inner files data with parent folder name
+			innerFiles := getFileListInDirectory(configRepoPath, envName, appName + "/" + f.Name())
+
+			for _, innerF := range innerFiles {
+				var innerConfFile ConfigFile
+				innerConfFile.fileInfo = innerF.fileInfo
+				innerConfFile.parentFolder = f.Name()
+				filtered = append(filtered, innerConfFile)
+			}
 		}
 	}
 
@@ -121,11 +138,11 @@ func getFileContent(configRepoPath string, envName string, appName string, fileN
 	return string(byteContent[:]), true
 }
 
-func mergeFileList(first []fs.FileInfo, second []fs.FileInfo) []fs.FileInfo {
+func mergeFileList(first []ConfigFile, second []ConfigFile) []ConfigFile {
 	for _, f := range first {
 		exist := false
 		for _, s := range second {
-			if f.Name() == s.Name() {
+			if f.fileInfo.Name() == s.fileInfo.Name() {
 				exist = true
 				break
 			}
@@ -138,7 +155,7 @@ func mergeFileList(first []fs.FileInfo, second []fs.FileInfo) []fs.FileInfo {
 	return second
 }
 
-func diffConfigFiles(configRepoPath string, qaFolder string, prodFolder string, appName string, files []fs.FileInfo, silent bool) []ConfigDiffItem {
+func diffConfigFiles(configRepoPath string, qaFolder string, prodFolder string, appName string, files []ConfigFile, silent bool) []ConfigDiffItem {
 
 	diffArray := make([]ConfigDiffItem, 0)
 
@@ -150,8 +167,16 @@ func diffConfigFiles(configRepoPath string, qaFolder string, prodFolder string, 
 			fmt.Println(string(colorBlue), "=====================================")
 		}
 
-		qaFileString, qafileExist := getFileContent(configRepoPath, qaFolder, appName, f.Name())
-		prodFileString, prodfileExist := getFileContent(configRepoPath, prodFolder, appName, f.Name())
+
+		var fileName string
+		if len(f.parentFolder) > 0 {
+			fileName = f.parentFolder + "/" + f.fileInfo.Name()
+		} else {
+			fileName = f.fileInfo.Name()
+		}
+
+		qaFileString, qafileExist := getFileContent(configRepoPath, qaFolder, appName, fileName)
+		prodFileString, prodfileExist := getFileContent(configRepoPath, prodFolder, appName, fileName)
 
 		dmp := diffmatchpatch.New()
 		diffs := dmp.DiffMain(qaFileString, prodFileString, false)
@@ -164,16 +189,16 @@ func diffConfigFiles(configRepoPath string, qaFolder string, prodFolder string, 
 		if !silent {
 
 			if item.noDiff {
-				fmt.Println(string(colorBlue), f.Name()+" has no diff ", string(colorReset))
+				fmt.Println(string(colorBlue), fileName+" has no diff ", string(colorReset))
 			} else {
-				fmt.Println(string(colorBlue), f.Name()+" config files diff : ", string(colorReset))
+				fmt.Println(string(colorBlue), fileName+" config files diff : ", string(colorReset))
 				fmt.Println(dmp.DiffPrettyText(diffs))
 			}
 		}
 
-		shouldFixTab := isYamlFile(f.Name())
+		shouldFixTab := isYamlFile(f.fileInfo.Name())
 
-		item.fileName = f.Name()
+		item.fileName = fileName
 		noFileWarningSpan := "<span style=\"color:red\">⚠️ No file available</span>"
 
 		if qafileExist && !prodfileExist && len(diffs) == 1 && diffs[0].Type == diffmatchpatch.DiffDelete {
