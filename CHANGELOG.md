@@ -1,4 +1,9 @@
 # Changelog
+## [0.8.0] - 2021-07-18
+### Added
+- Support structure for ECS config repo
+- Support for diff files in sub-folder
+
 ## [0.7.4] - 2021-07-04
 ### Changed
 - Reformat codes

@@ -15,13 +15,14 @@ config-repo
 │   └── <app-name>
 │       └── <config files>
 ```
-or (using -e option)
+or (*** using `-e` option)
 ```
 config-repo
 ├── th
 │   └── prod
 │       └── <app-name>
 │           └── <config files>
+│           └── vault
 │   └── staging
 │       └── <app-name>
 │           └── <config files>
