@@ -15,6 +15,17 @@ config-repo
 │   └── <app-name>
 │       └── <config files>
 ```
+or (using -e option)
+```
+config-repo
+├── th
+│   └── prod
+│       └── <app-name>
+│           └── <config files>
+│   └── staging
+│       └── <app-name>
+│           └── <config files>
+```
 
 ## Prepare Go enviroment
 These are steps to setup your environment to install and run Go package easily.
@@ -55,6 +66,9 @@ prodConfigChecker run <app_name> --config custom-config.yaml
 
 // run with silent mode, no files diff in console output
 prodConfigChecker run <app_name> -s
+
+// run with ECS repo config path
+prodConfigChecker run <app_name> -e
 ```
 
 Check the diff output in terminal console. HTML output file is also generated in your current directory, in case you want to share the result with others.
