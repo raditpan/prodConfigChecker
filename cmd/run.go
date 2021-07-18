@@ -37,8 +37,11 @@ import (
 
 var repo string
 var silentMode bool
+var ecsRepoMode bool
 var colorBlue = "\033[34m"
 var colorReset = "\033[0m"
+var qaFolder string
+var prodFolder string
 
 // runCmd represents the run command
 var runCmd = &cobra.Command{
@@ -70,8 +73,16 @@ prodConfigChecker run <app name> --repo <absolute path to your config repo>`,
 			configRepoPath = viper.GetString("configRepoPath")
 		}
 
-		qaFiles := getFileListInDirectory(configRepoPath, "qa", appName)
-		prodFiles := getFileListInDirectory(configRepoPath, "production", appName)
+		if ecsRepoMode {
+			qaFolder = "th/staging"
+			prodFolder = "th/prod"
+		} else {
+			qaFolder = "qa"
+			prodFolder = "production"
+		}
+
+		qaFiles := getFileListInDirectory(configRepoPath, qaFolder, appName)
+		prodFiles := getFileListInDirectory(configRepoPath, prodFolder, appName)
 		files := mergeFileList(qaFiles, prodFiles)
 		diffArray := diffConfigFiles(configRepoPath, appName, files, silentMode)
 
@@ -139,8 +150,8 @@ func diffConfigFiles(configRepoPath string, appName string, files []fs.FileInfo,
 			fmt.Println(string(colorBlue), "=====================================")
 		}
 
-		qaFileString, qafileExist := getFileContent(configRepoPath, "qa", appName, f.Name())
-		prodFileString, prodfileExist := getFileContent(configRepoPath, "production", appName, f.Name())
+		qaFileString, qafileExist := getFileContent(configRepoPath, qaFolder, appName, f.Name())
+		prodFileString, prodfileExist := getFileContent(configRepoPath, prodFolder, appName, f.Name())
 
 		dmp := diffmatchpatch.New()
 		diffs := dmp.DiffMain(qaFileString, prodFileString, false)
@@ -208,6 +219,7 @@ func init() {
 
 	rootCmd.PersistentFlags().StringVar(&repo, "repo", "", "Absolute path to your config repo")
 	rootCmd.PersistentFlags().BoolVarP(&silentMode, "silent", "s", false, "Silence diff result in console output")
+	rootCmd.PersistentFlags().BoolVarP(&ecsRepoMode, "ecs", "e", false, "Use ECS repo folder structure")
 
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
