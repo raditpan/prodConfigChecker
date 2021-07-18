@@ -47,29 +47,29 @@ func Test_GetFileListInDirectory(t *testing.T) {
 		t.Errorf("Incorrect number of files")
 	}
 
-	if result[0].Name() != "application.yaml" {
-		t.Errorf("Incorrect file name, got: %s", result[0].Name())
+	if result[0].fileInfo.Name() != "application.yaml" {
+		t.Errorf("Incorrect file name, got: %s", result[0].fileInfo.Name())
 	}
 
-	if result[1].Name() != "config.json" {
-		t.Errorf("Incorrect file name, got: %s", result[0].Name())
+	if result[1].fileInfo.Name() != "config.json" {
+		t.Errorf("Incorrect file name, got: %s", result[0].fileInfo.Name())
 	}
 }
 
-func Test_GetFileListInDirectory_SkipInnerDirectory(t *testing.T) {
+func Test_GetFileListInDirectory_IncludeInnerDirectory(t *testing.T) {
 
 	result := getFileListInDirectory("../testdata", "qa", "acm-test")
 
-	if len(result) != 4 {
+	if len(result) != 5 {
 		t.Errorf("Incorrect number of files")
 	}
 
-	if result[0].Name() != "application.yaml" {
-		t.Errorf("Incorrect file name, got: %s", result[0].Name())
+	if result[0].fileInfo.Name() != "application.yaml" {
+		t.Errorf("Incorrect file name, got: %s", result[0].fileInfo.Name())
 	}
 
-	if result[1].Name() != "config.json" {
-		t.Errorf("Incorrect file name, got: %s", result[0].Name())
+	if result[1].fileInfo.Name() != "config.json" {
+		t.Errorf("Incorrect file name, got: %s", result[0].fileInfo.Name())
 	}
 }
 
@@ -89,13 +89,13 @@ func Test_MergeFileList(t *testing.T) {
 
 	result := mergeFileList(qaFiles, prodFiles)
 
-	if len(result) != 4 {
+	if len(result) != 5 {
 		t.Errorf("Incorrect number of files")
 	}
 
 	exist := false
 	for _, f := range result {
-		if f.Name() == "qa-application.yaml" {
+		if f.fileInfo.Name() == "qa-application.yaml" {
 			exist = true
 		}
 	}
