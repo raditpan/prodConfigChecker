@@ -125,11 +125,11 @@ func Test_DiffConfigFiles(t *testing.T) {
 		t.Errorf("Incorrect file name, got: %s", result[0].fileName)
 	}
 
-	if result[0].diffLeft != "<span style=\"word-wrap:break-word\">testconfig:&nbsp;</span><del style=\"background:#ffb5b5;\">tru</del><span style=\"word-wrap:break-word\">e</span>" {
+	if result[0].diffLeft != "<span style=\"word-wrap:break-word\">testconfig:&nbsp;</span><del style=\"background:#ffb5b5;word-wrap:break-word\">tru</del><span style=\"word-wrap:break-word\">e</span>" {
 		t.Errorf("Incorrect diff left, got: %s", result[0].diffLeft)
 	}
 
-	if result[0].diffRight != "<span style=\"word-wrap:break-word\">testconfig:&nbsp;</span><span style=\"background:#d1ffd1;\">fals</span><span style=\"word-wrap:break-word\">e</span>" {
+	if result[0].diffRight != "<span style=\"word-wrap:break-word\">testconfig:&nbsp;</span><span style=\"background:#d1ffd1;word-wrap:break-word\">fals</span><span style=\"word-wrap:break-word\">e</span>" {
 		t.Errorf("Incorrect diff left, got: %s", result[0].diffRight)
 	}
 

@@ -90,7 +90,7 @@ func diffPrettyHtmlLeft(diffs []diffmatchpatch.Diff, doFixTab bool) string {
 
 		switch diff.Type {
 		case diffmatchpatch.DiffDelete:
-			_, _ = buff.WriteString("<del style=\"background:#ffb5b5;\">")
+			_, _ = buff.WriteString("<del style=\"background:#ffb5b5;word-wrap:break-word\">")
 			_, _ = buff.WriteString(text)
 			_, _ = buff.WriteString("</del>")
 		case diffmatchpatch.DiffEqual:
@@ -118,7 +118,7 @@ func diffPrettyHtmlRight(diffs []diffmatchpatch.Diff, doFixTab bool) string {
 
 		switch diff.Type {
 		case diffmatchpatch.DiffInsert:
-			_, _ = buff.WriteString("<span style=\"background:#d1ffd1;\">")
+			_, _ = buff.WriteString("<span style=\"background:#d1ffd1;word-wrap:break-word\">")
 			_, _ = buff.WriteString(text)
 			_, _ = buff.WriteString("</span>")
 		case diffmatchpatch.DiffEqual:
