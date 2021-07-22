@@ -18,7 +18,7 @@ func Test_WriteHtml(t *testing.T) {
 
 	diffArray = append(diffArray, item)
 
-	result := writeHtmlFile(diffArray, "acm-test")
+	result := writeHtmlFile(diffArray, "acm-test", "QA")
 
 	if result != "acm-test_config_diff.html" {
 		t.Errorf("Result file name not as expected, got: %s", result)

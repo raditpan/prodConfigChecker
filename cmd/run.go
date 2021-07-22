@@ -78,12 +78,15 @@ prodConfigChecker run <app name> --repo <absolute path to your config repo>`,
 			configRepoPath = viper.GetString("configRepoPath")
 		}
 
+		var qaHtmlSectionTitle string
 		if ecsRepoMode {
 			qaFolder = "th/staging"
 			prodFolder = "th/prod"
+			qaHtmlSectionTitle = "STAGING"
 		} else {
 			qaFolder = "qa"
 			prodFolder = "production"
+			qaHtmlSectionTitle = "QA"
 		}
 
 		qaFiles := getFileListInDirectory(configRepoPath, qaFolder, appName)
@@ -91,7 +94,7 @@ prodConfigChecker run <app name> --repo <absolute path to your config repo>`,
 		files := mergeFileList(qaFiles, prodFiles)
 		diffArray := diffConfigFiles(configRepoPath, qaFolder, prodFolder, appName, files, silentMode)
 
-		outputFileName := writeHtmlFile(diffArray, appName)
+		outputFileName := writeHtmlFile(diffArray, appName, qaHtmlSectionTitle)
 
 		fmt.Println(string(colorBlue), "=====================================")
 		fmt.Println("HTML output file : " + outputFileName)

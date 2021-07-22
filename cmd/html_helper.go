@@ -16,7 +16,7 @@ import (
 	"time"
 )
 
-func writeHtmlFile(diffArray []ConfigDiffItem, appName string) string {
+func writeHtmlFile(diffArray []ConfigDiffItem, appName string, qaTitle string) string {
 
 	var sb strings.Builder
 	currentTime := time.Now()
@@ -46,7 +46,7 @@ func writeHtmlFile(diffArray []ConfigDiffItem, appName string) string {
 		sb.WriteString("<div style=\"overflow: auto;\">")
 		sb.WriteString("<h3> 🛂 " + htmlDiff.fileName + " : </h3><br>")
 		sb.WriteString("<div style=\"float: left;width: 48%; border-right: 2px solid #808080;\">")
-		sb.WriteString("<b> QA</b><br><br>")
+		sb.WriteString("<b> " + qaTitle + "</b><br><br>")
 		sb.WriteString(htmlDiff.diffLeft)
 		sb.WriteString("</div>")
 		sb.WriteString("<div style=\"float: left;width: 50%; margin-left: 1em;\">")
