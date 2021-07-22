@@ -1,4 +1,10 @@
 # Changelog
+## [0.8.1] - 2021-07-22
+### Changed
+- Update ECS QA Section title to Staging
+### Fixed
+- Fix long text with comma not break in del/insert span
+
 ## [0.8.0] - 2021-07-18
 ### Added
 - Support structure for ECS config repo
