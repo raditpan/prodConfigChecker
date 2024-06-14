@@ -45,7 +45,7 @@ export PATH=${PATH}:$GOBIN
 ## How to run
 Install the command line tool:
 ```
-go get github.com/raditpan/prodConfigChecker
+go install github.com/raditpan/prodConfigChecker
 ```
 
 
