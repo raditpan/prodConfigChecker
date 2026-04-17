@@ -6,6 +6,7 @@
 Command line tool for checking diff between prod and qa config, to help reduce human error when working with config files in multiple environments. It also generates HTML diff report to share with others for reviewing process.
 
 Config repo's folder structure that is supported:
+
 ```
 config-repo
 ├── production
@@ -15,7 +16,9 @@ config-repo
 │   └── <app-name>
 │       └── <config files>
 ```
-or (*** using `-e` option)
+
+or (\*\*\* using `-e` option)
+
 ```
 config-repo
 ├── th
@@ -28,14 +31,17 @@ config-repo
 │           └── <config files>
 ```
 
-## Prepare Go enviroment
+## Prepare Go environment
+
 These are steps to setup your environment to install and run Go package easily.
 First, install Go in your machine:
+
 ```
 brew install go
 ```
 
 Add below GOPATH var in your ~/.zshrc or ~/.bash_profile:
+
 ```
 export GOPATH=$HOME/go
 export GOBIN=$GOPATH/bin
@@ -43,13 +49,15 @@ export PATH=${PATH}:$GOBIN
 ```
 
 ## How to run
+
 Install the command line tool:
+
 ```
 go install github.com/raditpan/prodConfigChecker
 ```
 
+Create `.prodConfigChecker.yaml` file in your home directory with path to your local config repo:
 
-Create `.prodConfigChecker.yaml` file in your home directoy with path to your local config repo:
 ```
 configRepoPath: "<absolute path to your config repo>"
 ```
@@ -77,6 +85,7 @@ Check the diff output in terminal console. HTML output file is also generated in
 ## Build/run from source
 
 Go to the directory you clone the project to. You can run the app with these commands:
+
 ```
 // get all the dependencies
 go get -d ./...

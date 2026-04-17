@@ -5,7 +5,7 @@ Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0
+	http://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
@@ -109,8 +109,8 @@ func getFileListInDirectory(configRepoPath string, envName string, appName strin
 	}
 
 	for _, f := range files {
-		// filter out system files with '.' as prefix
-		if !strings.HasPrefix(f.Name(), ".") && !f.IsDir() {
+		// filter out system files with '.' as prefix, but allow .env files
+		if (!strings.HasPrefix(f.Name(), ".") || isEnvFile(f.Name())) && !f.IsDir() {
 			var confFile ConfigFile
 			confFile.fileInfo = f
 			filtered = append(filtered, confFile)
@@ -234,6 +234,10 @@ func diffConfigFiles(configRepoPath string, qaFolder string, prodFolder string, 
 func isYamlFile(fileName string) bool {
 	fileExtension := filepath.Ext(fileName)
 	return fileExtension == ".yml" || fileExtension == ".yaml"
+}
+
+func isEnvFile(fileName string) bool {
+	return fileName == ".env" || strings.HasPrefix(fileName, ".env.")
 }
 
 func init() {
