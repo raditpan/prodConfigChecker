@@ -1,4 +1,8 @@
 # Changelog
+## [0.9.0] - 2026-04-17
+### ### Added
+- Support .env file for diff checking 
+
 ## [0.8.1] - 2021-07-22
 ### Changed
 - Update ECS QA Section title to Staging
