@@ -43,16 +43,20 @@ func Test_GetFileListInDirectory(t *testing.T) {
 
 	result := getFileListInDirectory("../testdata", "production", "acm-test")
 
-	if len(result) != 2 {
-		t.Errorf("Incorrect number of files")
+	if len(result) != 3 {
+		t.Errorf("Incorrect number of files, got: %d", len(result))
 	}
 
-	if result[0].fileInfo.Name() != "application.yaml" {
+	if result[0].fileInfo.Name() != ".env" {
 		t.Errorf("Incorrect file name, got: %s", result[0].fileInfo.Name())
 	}
 
-	if result[1].fileInfo.Name() != "config.json" {
-		t.Errorf("Incorrect file name, got: %s", result[0].fileInfo.Name())
+	if result[1].fileInfo.Name() != "application.yaml" {
+		t.Errorf("Incorrect file name, got: %s", result[1].fileInfo.Name())
+	}
+
+	if result[2].fileInfo.Name() != "config.json" {
+		t.Errorf("Incorrect file name, got: %s", result[2].fileInfo.Name())
 	}
 }
 
@@ -60,8 +64,8 @@ func Test_GetFileListInDirectory_IncludeInnerDirectory(t *testing.T) {
 
 	result := getFileListInDirectory("../testdata", "qa", "acm-test")
 
-	if len(result) != 5 {
-		t.Errorf("Incorrect number of files")
+	if len(result) != 6 {
+		t.Errorf("Incorrect number of files, got: %d", len(result))
 	}
 
 	exist := false
@@ -96,8 +100,8 @@ func Test_MergeFileList(t *testing.T) {
 
 	result := mergeFileList(qaFiles, prodFiles)
 
-	if len(result) != 5 {
-		t.Errorf("Incorrect number of files")
+	if len(result) != 6 {
+		t.Errorf("Incorrect number of files, got: %d", len(result))
 	}
 
 	exist := false
@@ -110,6 +114,17 @@ func Test_MergeFileList(t *testing.T) {
 	if !exist {
 		t.Errorf("qa-only config not exist after merging")
 	}
+
+	envExist := false
+	for _, f := range result {
+		if f.fileInfo.Name() == ".env" {
+			envExist = true
+		}
+	}
+
+	if !envExist {
+		t.Errorf(".env file not included after merging")
+	}
 }
 
 func Test_DiffConfigFiles(t *testing.T) {
@@ -117,27 +132,35 @@ func Test_DiffConfigFiles(t *testing.T) {
 	files := getFileListInDirectory("../testdata", "production", "acm-test")
 	result := diffConfigFiles("../testdata", "qa", "production", "acm-test", files, true)
 
-	if len(result) != 2 {
-		t.Errorf("Incorrect number of files")
+	if len(result) != 3 {
+		t.Errorf("Incorrect number of files, got: %d", len(result))
 	}
 
-	if result[0].fileName != "application.yaml" {
+	if result[0].fileName != ".env" {
 		t.Errorf("Incorrect file name, got: %s", result[0].fileName)
 	}
 
-	if result[0].diffLeft != "<span style=\"word-wrap:break-word\">testconfig:&nbsp;</span><del style=\"background:#ffb5b5;word-wrap:break-word\">tru</del><span style=\"word-wrap:break-word\">e</span>" {
-		t.Errorf("Incorrect diff left, got: %s", result[0].diffLeft)
+	if result[0].noDiff {
+		t.Errorf("Expected diff in .env but got no diff")
 	}
 
-	if result[0].diffRight != "<span style=\"word-wrap:break-word\">testconfig:&nbsp;</span><span style=\"background:#d1ffd1;word-wrap:break-word\">fals</span><span style=\"word-wrap:break-word\">e</span>" {
-		t.Errorf("Incorrect diff left, got: %s", result[0].diffRight)
-	}
-
-	if result[1].fileName != "config.json" {
+	if result[1].fileName != "application.yaml" {
 		t.Errorf("Incorrect file name, got: %s", result[1].fileName)
 	}
 
-	if !result[1].noDiff {
+	if result[1].diffLeft != "<span style=\"word-wrap:break-word\">testconfig:&nbsp;</span><del style=\"background:#ffb5b5;word-wrap:break-word\">tru</del><span style=\"word-wrap:break-word\">e</span>" {
+		t.Errorf("Incorrect diff left, got: %s", result[1].diffLeft)
+	}
+
+	if result[1].diffRight != "<span style=\"word-wrap:break-word\">testconfig:&nbsp;</span><span style=\"background:#d1ffd1;word-wrap:break-word\">fals</span><span style=\"word-wrap:break-word\">e</span>" {
+		t.Errorf("Incorrect diff right, got: %s", result[1].diffRight)
+	}
+
+	if result[2].fileName != "config.json" {
+		t.Errorf("Incorrect file name, got: %s", result[2].fileName)
+	}
+
+	if !result[2].noDiff {
 		t.Errorf("Unexpected diff in config.json")
 	}
 }
@@ -147,8 +170,8 @@ func Test_DiffConfigFiles_NonSilent(t *testing.T) {
 	files := getFileListInDirectory("../testdata", "production", "acm-test")
 	result := diffConfigFiles("../testdata", "qa", "production", "acm-test", files, false)
 
-	if len(result) != 2 {
-		t.Errorf("Incorrect number of files")
+	if len(result) != 3 {
+		t.Errorf("Incorrect number of files, got: %d", len(result))
 	}
 }
 
@@ -169,5 +192,64 @@ func Test_IsYamlFile(t *testing.T) {
 		if result != tt.expected {
 			t.Errorf("Result not as expected, got: %t", result)
 		}
+	}
+}
+
+func Test_IsEnvFile(t *testing.T) {
+	tests := []struct {
+		name     string
+		fileName string
+		expected bool
+	}{
+		{"env file", ".env", true},
+		{"env with suffix", ".env.local", true},
+		{"env production suffix", ".env.production", true},
+		{"env staging suffix", ".env.staging", true},
+		{"non-env dotfile", ".test_system_file", false},
+		{"regular file", "application.yaml", false},
+		{"env-like but not dotfile", "env", false},
+	}
+
+	for _, tt := range tests {
+		result := isEnvFile(tt.fileName)
+
+		if result != tt.expected {
+			t.Errorf("[%s] Result not as expected, got: %t", tt.name, result)
+		}
+	}
+}
+
+func Test_GetFileListInDirectory_IncludeEnvFile(t *testing.T) {
+	result := getFileListInDirectory("../testdata", "production", "acm-test")
+
+	envFound := false
+	systemFileFound := false
+	for _, f := range result {
+		if f.fileInfo.Name() == ".env" {
+			envFound = true
+		}
+		if f.fileInfo.Name() == ".test_system_file" {
+			systemFileFound = true
+		}
+	}
+
+	if !envFound {
+		t.Errorf(".env file should be included in file list")
+	}
+
+	if systemFileFound {
+		t.Errorf(".test_system_file should be excluded from file list")
+	}
+}
+
+func Test_GetFileContent_EnvFile(t *testing.T) {
+	result, fileExist := getFileContent("../testdata", "qa", "acm-test", ".env")
+
+	if !fileExist {
+		t.Errorf(".env file should exist")
+	}
+
+	if result == "" {
+		t.Errorf(".env file content should not be empty")
 	}
 }
